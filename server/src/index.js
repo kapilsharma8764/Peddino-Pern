@@ -593,7 +593,10 @@ app.get(
     const html = home?.html ?? site.html
     if (!html) return notFound(res, 'No site here yet.')
 
-    viewCounter.hit(site.id)
+    // A serverless function can be frozen right after it answers, which would lose hits waiting
+    // in memory for the next batch; there each visit is written before the page is sent.
+    if (process.env.VERCEL) await increment('sites', site.id, 'views', 1).catch(() => {})
+    else viewCounter.hit(site.id)
     res.type('html').send(html)
   }),
 )
