@@ -1,14 +1,16 @@
 import { useMemo, useState } from 'react'
 import * as Icons from 'lucide-react'
 import { Search } from 'lucide-react'
-import { matchesTypeSearch, websiteTypes } from './website-types'
+import { useCatalog } from '@/store/catalogStore'
+import { matchesTypeSearch } from './website-types'
 
 type IconComponent = React.ComponentType<{ size?: number }>
 
 /** Searchable cards for the kind of website. Used by both setup paths. */
 export function WebsiteTypeSelector({ value, onChange }: { value: string | null; onChange: (id: string) => void }) {
   const [query, setQuery] = useState('')
-  const shown = useMemo(() => websiteTypes.filter((type) => matchesTypeSearch(type, query)), [query])
+  const websiteTypes = useCatalog((s) => s.websiteTypes)
+  const shown = useMemo(() => websiteTypes.filter((type) => matchesTypeSearch(type, query)), [websiteTypes, query])
 
   return (
     <div>

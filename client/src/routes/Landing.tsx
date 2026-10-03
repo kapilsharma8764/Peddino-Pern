@@ -1,40 +1,18 @@
-﻿import { useRef, useState } from 'react'
+﻿import { useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, Check, ChevronDown, Code2, Droplet, Globe2, Image, Images, Layers3, LayoutGrid, LayoutTemplate, Monitor, MousePointer2, Network, Palette, PanelsTopLeft, Pencil, Play, Rocket, Sparkles, Square, Type, Upload, Wand2 } from 'lucide-react'
-import { useBusinessStore } from '@/store/businessStore'
-import { profileFromDescription } from '@/onboarding/from-description'
-import { categoryOptions } from '@/onboarding/profile'
+import { ArrowRight, Check, ChevronDown, Code2, Droplet, Globe2, Image, LayoutTemplate, Monitor, MousePointer2, Network, Palette, PanelsTopLeft, Pencil, Play, Rocket, Sparkles, Square, Type, Upload, Wand2 } from 'lucide-react'
+import { TryYourIdea } from '@/landing/TryYourIdea'
+import { listOf, usePageContent } from '@/services/contentApi'
 import { EditorScene, Reveal, ShowreelVideo, TemplateOrbit, WorkflowDiagram } from '@/components/studio/Motion'
 import { LandingHeroVideo } from '@/components/studio/LandingHeroVideo'
 import { MarketingFooter } from '@/marketing/MarketingPage'
 
-const questions = [
-  ['Do I need to know how to code?', 'No. Start with your business details or a short description, choose a template, and edit visually. You can change text, images, layouts and colours in the editor.'],
-  ['Can I use my own website design?', 'Yes. Import an HTML file or a website ZIP from the template library. You can also start with one of the ready-to-edit designs and make it your own.'],
-  ['Will my website work on mobile?', 'The templates include responsive layouts. Use the desktop, tablet and mobile previews to check your content and refine it before publishing.'],
-  ['Can I update my website after publishing?', 'Yes. Open your saved site, make changes in the editor, and publish again. Your website and customer enquiries stay together in your workspace.'],
-]
-
-const tryExamples: [string, string][] = [
-  ['Cafe', 'A modern neighbourhood café serving artisan coffee and fresh pastries.'],
-  ['School', 'A modern school website for admissions, courses, faculty and student information.'],
-  ['Portfolio', 'A professional freelancer portfolio showcasing projects, skills and client work.'],
-  ['Restaurant', 'A stylish restaurant website with menu, reservations and location information.'],
-  ['Ecommerce', 'An online store selling handmade home goods with secure checkout and delivery tracking.'],
-  ['Real Estate', 'A real estate agency website listing properties for sale and rent with enquiry forms.'],
-]
-
 export function Landing() {
   const navigate = useNavigate()
-  const [description, setDescription] = useState('')
-  const [preview, setPreview] = useState<ReturnType<typeof profileFromDescription> | null>(null)
+  // The FAQ is managed in the database (site_content, page "home"); the bundled copy shows until it answers.
+  const { sections } = usePageContent('home')
+  const questions = listOf<[string, string]>(sections.faq?.content.items)
   const scrollRoot = useRef<HTMLDivElement>(null)
-
-  function continueWithBrief() {
-    if (!preview) return
-    useBusinessStore.getState().update(preview)
-    navigate('/create')
-  }
 
   return <div ref={scrollRoot} className="studio-landing h-full overflow-y-auto overflow-x-hidden" id="landing-scroll">
     <section className="studio-hero studio-container">
@@ -154,43 +132,7 @@ export function Landing() {
 
     <section id="showreel" className="studio-section studio-container"><Reveal><div className="showreel-heading"><div><span className="studio-eyebrow">04 / A LITTLE PERSPECTIVE</span><h2>Good ideas.<br /><em>In full motion.</em></h2></div><p className="studio-copy">A closer look at the possibilities.<br />Explore our templates from a different angle.</p></div><ShowreelVideo /></Reveal></section>
 
-    <section id="try-it" className="studio-section studio-container"><Reveal className="brief-section tryx"><i className="tryx-glow tryx-glow-a" aria-hidden="true" /><i className="tryx-glow tryx-glow-b" aria-hidden="true" /><div className="tryx-grid">
-      <div className="tryx-left">
-        <span className="tryx-eyebrow">05 / TRY YOUR IDEA</span>
-        <h2>Turn your idea into a<br /><span className="tryx-grad">stunning website</span> with AI.</h2>
-        <p className="tryx-lede">Describe your business in a few words and we’ll turn your idea into a clear website direction.</p>
-        <form className="tryx-card" onSubmit={(event) => { event.preventDefault(); setPreview(profileFromDescription(description.trim())) }}>
-          <label htmlFor="business-brief">What are you building?</label>
-          <textarea id="business-brief" required minLength={12} maxLength={1200} value={description} onChange={(event) => { setDescription(event.target.value); setPreview(null) }} placeholder="A design studio called Forma, creating thoughtful interiors for modern homes…" rows={5} />
-          <div className="tryx-chips"><span>Try an example:</span>{tryExamples.map(([name, text]) => <button key={name} type="button" className="tryx-chip" onClick={() => { setDescription(text); setPreview(null) }}>{name}</button>)}</div>
-          <button className="tryx-cta" type="submit"><Wand2 size={18} /> Find my direction <ArrowRight size={17} /></button>
-        </form>
-      </div>
-      <div className="tryx-right" aria-live="polite">
-        <div className="tryx-stage"><div className="tryx-orbit one" aria-hidden="true" /><div className="tryx-orbit two" aria-hidden="true" /><div className="tryx-builder" aria-hidden="true">
-          <div className="tryx-bar"><i /><i /><i /><span>Peddino Site Builder · Editor</span><div className="tryx-bar-actions"><em><Sparkles size={11} />AI draft</em><b>Publish</b></div></div>
-          <div className="tryx-command-row"><span><Wand2 size={12} /> Generate layout</span><span><Palette size={12} /> Match brand</span><span><Monitor size={12} /> Responsive</span></div>
-          <div className="tryx-body">
-            <aside><strong>Widgets</strong>{([[Type, 'Text'], [Image, 'Image'], [Square, 'Button'], [Layers3, 'Section'], [LayoutTemplate, 'Container'], [Images, 'Gallery']] as const).map(([Icon, name]) => <span key={name}><Icon size={13} />{name}</span>)}</aside>
-            <div className="tryx-canvas">
-              <div className="tryx-nav"><b>FORMA</b><span>Home</span><span>Work</span><span>About</span><button>Book consult</button></div>
-              <div className="tryx-hero">
-                <div className="tryx-copy-block"><span>Interior Studio</span><h4>Thoughtful interiors<br />for modern living.</h4><p>We create calm, functional spaces designed around the way you live.</p><em>Explore our work</em></div>
-                <div className="tryx-photo"><i /><i /><i /><strong>New project</strong></div>
-              </div>
-              <div className="tryx-section-row"><span><b>12</b> Projects</span><span><b>4.9</b> Rating</span><span><b>24h</b> Draft ready</span></div>
-              <div className="tryx-selection"><i /><i /><i /><i /><span><Pencil size={12} /> Hero headline selected</span></div>
-            </div>
-          </div>
-        </div>
-        <div className="tryx-float tryx-float-templates"><strong><LayoutTemplate size={14} /> Choose a Template</strong><div>{['Business', 'Portfolio', 'Restaurant', 'Education'].map((name, i) => <span key={name} className={`tryx-thumb t${i}`}><i />{name}</span>)}</div><Link to="/start">View templates <ArrowRight size={13} /></Link></div>
-        <div className="tryx-float tryx-float-ai"><strong><Sparkles size={14} /> AI Suggestions</strong><span>Added services, gallery and contact flow from your brief.</span><small><Check size={12} /> 92% ready</small></div>
-        <div className="tryx-float tryx-float-colors"><strong><Droplet size={14} /> Theme Colors</strong><div>{['#7c3aed', '#ec4899', '#3b82f6', '#06b6d4', '#f97316', '#9ca3af'].map((color) => <i key={color} style={{ background: color }} />)}</div></div>
-        </div>
-        <div className="tryx-badges"><span><LayoutGrid size={14} /> 200+ Widgets</span><span><LayoutTemplate size={14} /> 300+ Templates</span><span><MousePointer2 size={14} /> Drag &amp; Drop</span></div>
-        {preview && <div className="brief-result has-result tryx-result"><span className="studio-badge"><Check size={13} /> YOUR STARTING POINT</span><h3>{preview.name || 'Your next big idea'}</h3><p>{categoryOptions.find((category) => category.value === preview.category)?.label || 'A website made for you'}</p><div className="brief-result-tags"><span>Homepage</span><span>About</span><span>Contact</span></div><p>We’ll carry your details into setup. Choose a design and make it yours in the editor.</p><button className="studio-text-link" onClick={continueWithBrief}>Continue with this idea <ArrowRight size={16} /></button></div>}
-      </div>
-    </div></Reveal></section>
+    <section id="try-it" className="studio-section studio-container"><Reveal className="brief-section tryx"><TryYourIdea /></Reveal></section>
 
     <section className="studio-section faq-section">
       <Reveal className="studio-container faq-pro">

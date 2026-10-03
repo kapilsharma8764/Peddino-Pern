@@ -1,0 +1,753 @@
+[
+  {
+    "slug": "business",
+    "name": "Business",
+    "description": "A company, shop or local service",
+    "icon": "Briefcase",
+    "category": "professional",
+    "websiteType": "business",
+    "keywords": [
+      "business",
+      "corporate",
+      "company"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Contact"
+    ],
+    "designs": [
+      "modern-business",
+      "professional-corporate",
+      "clean-minimal"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "slug": "agency",
+    "name": "Agency",
+    "description": "Design, marketing or digital agency",
+    "icon": "Rocket",
+    "category": "professional",
+    "websiteType": "business",
+    "keywords": [
+      "agency",
+      "creative",
+      "studio",
+      "marketing"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Portfolio",
+      "Team",
+      "Contact"
+    ],
+    "designs": [
+      "bold-agency",
+      "creative-portfolio",
+      "dark-modern"
+    ],
+    "sortOrder": 20
+  },
+  {
+    "slug": "portfolio",
+    "name": "Portfolio",
+    "description": "Show your work and projects",
+    "icon": "Palette",
+    "category": "professional",
+    "websiteType": null,
+    "keywords": [
+      "portfolio",
+      "creative",
+      "resume",
+      "personal"
+    ],
+    "pages": [
+      "About",
+      "Portfolio",
+      "Contact"
+    ],
+    "designs": [
+      "creative-portfolio",
+      "clean-minimal",
+      "dark-modern"
+    ],
+    "sortOrder": 30
+  },
+  {
+    "slug": "freelancer",
+    "name": "Freelancer",
+    "description": "Offer your skills and services",
+    "icon": "User",
+    "category": "professional",
+    "websiteType": null,
+    "keywords": [
+      "freelance",
+      "portfolio",
+      "personal",
+      "resume"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Portfolio",
+      "Contact"
+    ],
+    "designs": [
+      "clean-minimal",
+      "creative-portfolio",
+      "light-elegant"
+    ],
+    "sortOrder": 40
+  },
+  {
+    "slug": "education",
+    "name": "Education",
+    "description": "Courses, training, learning",
+    "icon": "GraduationCap",
+    "category": "education",
+    "websiteType": "education",
+    "keywords": [
+      "education",
+      "learn",
+      "course",
+      "academy"
+    ],
+    "pages": [
+      "About",
+      "Courses",
+      "Admission",
+      "Contact"
+    ],
+    "designs": [
+      "education",
+      "modern-business",
+      "light-elegant"
+    ],
+    "sortOrder": 50
+  },
+  {
+    "slug": "school",
+    "name": "School",
+    "description": "Nursery to senior school",
+    "icon": "School",
+    "category": "education",
+    "websiteType": "education",
+    "keywords": [
+      "school",
+      "academy",
+      "kids",
+      "education"
+    ],
+    "pages": [
+      "About",
+      "Admission",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "education",
+      "light-elegant",
+      "modern-business"
+    ],
+    "sortOrder": 60
+  },
+  {
+    "slug": "college",
+    "name": "College",
+    "description": "College or university",
+    "icon": "Landmark",
+    "category": "education",
+    "websiteType": "education",
+    "keywords": [
+      "college",
+      "university",
+      "campus",
+      "education"
+    ],
+    "pages": [
+      "About",
+      "Courses",
+      "Admission",
+      "Contact"
+    ],
+    "designs": [
+      "education",
+      "professional-corporate",
+      "modern-business"
+    ],
+    "sortOrder": 70
+  },
+  {
+    "slug": "coaching",
+    "name": "Coaching",
+    "description": "Coaching classes and tutoring",
+    "icon": "Presentation",
+    "category": "education",
+    "websiteType": "education",
+    "keywords": [
+      "coaching",
+      "tutor",
+      "class",
+      "education",
+      "learn"
+    ],
+    "pages": [
+      "About",
+      "Courses",
+      "Contact",
+      "FAQ"
+    ],
+    "designs": [
+      "education",
+      "modern-business",
+      "clean-minimal"
+    ],
+    "sortOrder": 80
+  },
+  {
+    "slug": "restaurant",
+    "name": "Restaurant",
+    "description": "Dine-in, takeaway or catering",
+    "icon": "UtensilsCrossed",
+    "category": "food",
+    "websiteType": null,
+    "keywords": [
+      "restaurant",
+      "food",
+      "dining",
+      "menu",
+      "taste"
+    ],
+    "pages": [
+      "About",
+      "Menu",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "restaurant",
+      "light-elegant",
+      "dark-modern"
+    ],
+    "sortOrder": 90
+  },
+  {
+    "slug": "cafe",
+    "name": "Cafe",
+    "description": "Coffee shop or bakery",
+    "icon": "Coffee",
+    "category": "food",
+    "websiteType": null,
+    "keywords": [
+      "cafe",
+      "coffee",
+      "bakery",
+      "food"
+    ],
+    "pages": [
+      "About",
+      "Menu",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "restaurant",
+      "light-elegant",
+      "clean-minimal"
+    ],
+    "sortOrder": 100
+  },
+  {
+    "slug": "hotel",
+    "name": "Hotel",
+    "description": "Hotel, resort or stay",
+    "icon": "Hotel",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "hotel",
+      "resort",
+      "stay",
+      "travel"
+    ],
+    "pages": [
+      "About",
+      "Rooms",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "light-elegant",
+      "restaurant",
+      "modern-business"
+    ],
+    "sortOrder": 110
+  },
+  {
+    "slug": "travel",
+    "name": "Travel",
+    "description": "Tours and trips",
+    "icon": "Plane",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "travel",
+      "tour",
+      "trip",
+      "holiday"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "modern-business",
+      "bold-agency",
+      "light-elegant"
+    ],
+    "sortOrder": 120
+  },
+  {
+    "slug": "realestate",
+    "name": "Real Estate",
+    "description": "Properties, builders, rentals",
+    "icon": "Building2",
+    "category": "realestate",
+    "websiteType": null,
+    "keywords": [
+      "real estate",
+      "property",
+      "home",
+      "estate"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "professional-corporate",
+      "modern-business",
+      "light-elegant"
+    ],
+    "sortOrder": 130
+  },
+  {
+    "slug": "ecommerce",
+    "name": "E-commerce",
+    "description": "An online shop",
+    "icon": "ShoppingBag",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "shop",
+      "store",
+      "ecommerce",
+      "product",
+      "fashion"
+    ],
+    "pages": [
+      "About",
+      "Shop",
+      "Contact",
+      "FAQ"
+    ],
+    "designs": [
+      "ecommerce",
+      "clean-minimal",
+      "bold-agency"
+    ],
+    "sortOrder": 140
+  },
+  {
+    "slug": "fashion",
+    "name": "Fashion",
+    "description": "Clothing, boutique or jewellery",
+    "icon": "Shirt",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "fashion",
+      "boutique",
+      "style",
+      "shop",
+      "store"
+    ],
+    "pages": [
+      "About",
+      "Shop",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "ecommerce",
+      "light-elegant",
+      "dark-modern"
+    ],
+    "sortOrder": 150
+  },
+  {
+    "slug": "beauty",
+    "name": "Beauty / Salon",
+    "description": "Salon, spa, barber",
+    "icon": "Scissors",
+    "category": "beauty",
+    "websiteType": null,
+    "keywords": [
+      "beauty",
+      "salon",
+      "spa",
+      "barber"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "light-elegant",
+      "clean-minimal",
+      "bold-agency"
+    ],
+    "sortOrder": 160
+  },
+  {
+    "slug": "healthcare",
+    "name": "Healthcare",
+    "description": "Hospitals, diagnostics, wellness",
+    "icon": "HeartPulse",
+    "category": "health",
+    "websiteType": null,
+    "keywords": [
+      "health",
+      "medical",
+      "hospital",
+      "care"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Team",
+      "Contact"
+    ],
+    "designs": [
+      "professional-corporate",
+      "modern-business",
+      "clean-minimal"
+    ],
+    "sortOrder": 170
+  },
+  {
+    "slug": "doctor",
+    "name": "Doctor / Clinic",
+    "description": "A doctor or dental clinic",
+    "icon": "Stethoscope",
+    "category": "health",
+    "websiteType": null,
+    "keywords": [
+      "doctor",
+      "clinic",
+      "dental",
+      "medical",
+      "health"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Contact",
+      "FAQ"
+    ],
+    "designs": [
+      "professional-corporate",
+      "clean-minimal",
+      "modern-business"
+    ],
+    "sortOrder": 180
+  },
+  {
+    "slug": "fitness",
+    "name": "Fitness / Gym",
+    "description": "Gym, yoga or sports",
+    "icon": "Dumbbell",
+    "category": "fitness",
+    "websiteType": null,
+    "keywords": [
+      "fitness",
+      "gym",
+      "yoga",
+      "sport"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Pricing",
+      "Contact"
+    ],
+    "designs": [
+      "dark-modern",
+      "bold-agency",
+      "modern-business"
+    ],
+    "sortOrder": 190
+  },
+  {
+    "slug": "construction",
+    "name": "Construction",
+    "description": "Builders and contractors",
+    "icon": "Hammer",
+    "category": "home-services",
+    "websiteType": null,
+    "keywords": [
+      "construction",
+      "builder",
+      "contractor",
+      "repair"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Gallery",
+      "Contact"
+    ],
+    "designs": [
+      "professional-corporate",
+      "bold-agency",
+      "modern-business"
+    ],
+    "sortOrder": 200
+  },
+  {
+    "slug": "architecture",
+    "name": "Architecture",
+    "description": "Architects and interior design",
+    "icon": "Ruler",
+    "category": "home-services",
+    "websiteType": null,
+    "keywords": [
+      "architecture",
+      "interior",
+      "design",
+      "home"
+    ],
+    "pages": [
+      "About",
+      "Portfolio",
+      "Services",
+      "Contact"
+    ],
+    "designs": [
+      "clean-minimal",
+      "light-elegant",
+      "creative-portfolio"
+    ],
+    "sortOrder": 210
+  },
+  {
+    "slug": "photography",
+    "name": "Photography",
+    "description": "Photographers and studios",
+    "icon": "Camera",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "photo",
+      "photography",
+      "studio",
+      "wedding"
+    ],
+    "pages": [
+      "About",
+      "Gallery",
+      "Pricing",
+      "Contact"
+    ],
+    "designs": [
+      "creative-portfolio",
+      "dark-modern",
+      "light-elegant"
+    ],
+    "sortOrder": 220
+  },
+  {
+    "slug": "event",
+    "name": "Event",
+    "description": "Events, weddings and planners",
+    "icon": "PartyPopper",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "event",
+      "wedding",
+      "party",
+      "celebration"
+    ],
+    "pages": [
+      "About",
+      "Gallery",
+      "FAQ",
+      "Contact"
+    ],
+    "designs": [
+      "light-elegant",
+      "bold-agency",
+      "creative-portfolio"
+    ],
+    "sortOrder": 230
+  },
+  {
+    "slug": "ngo",
+    "name": "NGO",
+    "description": "Charity or non-profit",
+    "icon": "HeartHandshake",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "ngo",
+      "charity",
+      "non-profit",
+      "foundation"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Team",
+      "Contact"
+    ],
+    "designs": [
+      "modern-business",
+      "education",
+      "light-elegant"
+    ],
+    "sortOrder": 240
+  },
+  {
+    "slug": "finance",
+    "name": "Finance",
+    "description": "Accounting, tax or consulting",
+    "icon": "Landmark",
+    "category": "professional",
+    "websiteType": "business",
+    "keywords": [
+      "finance",
+      "accounting",
+      "consult",
+      "legal",
+      "law"
+    ],
+    "pages": [
+      "About",
+      "Services",
+      "Team",
+      "Contact"
+    ],
+    "designs": [
+      "professional-corporate",
+      "modern-business",
+      "clean-minimal"
+    ],
+    "sortOrder": 250
+  },
+  {
+    "slug": "technology",
+    "name": "Technology / SaaS",
+    "description": "Software, apps and IT",
+    "icon": "Cpu",
+    "category": "professional",
+    "websiteType": "technology",
+    "keywords": [
+      "tech",
+      "software",
+      "saas",
+      "app",
+      "startup"
+    ],
+    "pages": [
+      "Features",
+      "Pricing",
+      "About",
+      "Contact"
+    ],
+    "designs": [
+      "startup-saas",
+      "dark-modern",
+      "modern-business"
+    ],
+    "sortOrder": 260
+  },
+  {
+    "slug": "blog",
+    "name": "Blog",
+    "description": "Articles and news",
+    "icon": "BookOpen",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "blog",
+      "news",
+      "magazine",
+      "article"
+    ],
+    "pages": [
+      "About",
+      "Blog",
+      "Contact"
+    ],
+    "designs": [
+      "clean-minimal",
+      "light-elegant",
+      "creative-portfolio"
+    ],
+    "sortOrder": 270
+  },
+  {
+    "slug": "personal",
+    "name": "Personal",
+    "description": "A personal site or resume",
+    "icon": "User",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [
+      "personal",
+      "resume",
+      "portfolio",
+      "profile"
+    ],
+    "pages": [
+      "About",
+      "Portfolio",
+      "Contact"
+    ],
+    "designs": [
+      "clean-minimal",
+      "creative-portfolio",
+      "light-elegant"
+    ],
+    "sortOrder": 280
+  },
+  {
+    "slug": "other",
+    "name": "Other",
+    "description": "Anything not listed here",
+    "icon": "LayoutGrid",
+    "category": "other",
+    "websiteType": null,
+    "keywords": [],
+    "pages": [
+      "About",
+      "Services",
+      "Contact"
+    ],
+    "designs": [
+      "modern-business",
+      "clean-minimal",
+      "light-elegant"
+    ],
+    "sortOrder": 290
+  }
+]

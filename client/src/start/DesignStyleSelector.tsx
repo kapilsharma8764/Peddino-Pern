@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react'
 import { themePresets } from '@/lib/theme-presets'
-import { starterDesigns, type StarterDesign } from './starter-designs'
+import { useCatalog } from '@/store/catalogStore'
+import type { StarterDesign } from './starter-designs'
 
 /** A miniature of the design in its own colours: header, hero, then its sections. */
 function DesignThumb({ design }: { design: StarterDesign }) {
@@ -35,6 +36,7 @@ function DesignThumb({ design }: { design: StarterDesign }) {
 
 /** The 12 starting designs for "Create a site". Recommended ones for the chosen type come first. */
 export function DesignStyleSelector({ value, onChange, recommended }: { value: string | null; onChange: (id: string) => void; recommended: string[] }) {
+  const starterDesigns = useCatalog((s) => s.starterDesigns)
   const ordered = [...starterDesigns].sort((a, b) => {
     if (a.blank !== b.blank) return a.blank ? 1 : -1
     const ra = recommended.indexOf(a.id), rb = recommended.indexOf(b.id)

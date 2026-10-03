@@ -244,3 +244,32 @@
 @media(max-width:1000px){.faq-section{padding-top:66px}.faq-pro{gap:30px}.faq-copy h2{font-size:clamp(40px,7vw,54px)}}
 @media(max-width:640px){.faq-copy h2{font-size:36px}.faq-pro .studio-faq summary{font-size:15px}}
 
+
+/* "Try your idea": working states. Chip selected, inline error, counter, themed sample page, direction result. */
+.tryx-card textarea[aria-invalid="true"]{border-color:#e5484d;box-shadow:0 0 0 4px #e5484d1f}
+.tryx-meta{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:-4px;min-height:18px}
+.tryx-error{margin:0;color:#c62828;font-size:12.5px;font-weight:600}
+.tryx-count{margin-left:auto;color:#9a9fb5;font-size:11.5px;font-variant-numeric:tabular-nums}
+.tryx-chip.is-active{border-color:#7c3aed;background:#f1ebff;color:#5b21b6}
+.tryx-chip:focus-visible,.tryx-cta:focus-visible,.tryx-next button:focus-visible{outline:3px solid #8b5cf6;outline-offset:2px}
+.tryx-cta:disabled{cursor:progress;opacity:.9;transform:none}
+.tryx-bar span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tryx-canvas{transition:background .3s}
+.tryx-canvas.is-themed{background:linear-gradient(180deg,var(--tx-a),var(--tx-b))}
+.tryx-canvas.is-themed .tryx-nav b,.tryx-canvas.is-themed .tryx-hero h4{color:var(--tx-ink)}
+.tryx-canvas.is-themed .tryx-hero em{background:var(--tx-ink)}
+.tryx-canvas.is-themed .tryx-photo{background:linear-gradient(160deg,var(--tx-b),var(--tx-accent))}
+.tryx-canvas.is-themed .tryx-photo i{background:var(--tx-ink);opacity:.22}
+.tryx-dir{display:grid;gap:10px;margin:14px 0 0}
+.tryx-dir>div{display:grid;gap:5px}
+.tryx-dir dt{color:#7a819a;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.tryx-dir dd{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:0}
+.tryx-dir dd span{padding:4px 10px;border-radius:999px;background:#f1ebff;color:#6d28d9;font-size:12px;font-weight:600}
+.tryx-swatch{display:inline-block;width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 2px #fff,0 0 0 3px #e3def6}
+.tryx-next{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}
+.tryx-next button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.tryx-next button:disabled{cursor:progress;opacity:.7}
+.tryx-next-primary{border:0;color:#fff;background:linear-gradient(135deg,#8b45ff,#5a3df0);box-shadow:0 10px 22px #6b3df04d}
+.tryx-next-secondary{border:1px solid #cfc4f5;color:#5b21b6;background:#fff}
+.tryx-next button:hover:not(:disabled){transform:translateY(-1px)}
+@media(max-width:640px){.tryx-next button{flex:1 1 100%}}

@@ -3,6 +3,7 @@ import { Download, Inbox, Loader2, RefreshCw, Search, Trash2 } from 'lucide-reac
 import { toast } from 'sonner'
 import type { Lead } from '@/lib/api'
 import { useLeadsStore } from '@/store/leadsStore'
+import { WorkspaceMetrics } from '@/components/WorkspaceMetrics'
 
 /**
  * The enquiry inbox.
@@ -105,9 +106,10 @@ export function Leads() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="shrink-0 px-6 pt-7 pb-4 border-b border-border-default">
+      <div className="workspace-page-header shrink-0 px-6 pt-7 pb-4 border-b border-border-default">
         <div className="max-w-5xl mx-auto flex flex-wrap items-end justify-between gap-4">
           <div className="hero-in" style={{ '--hero-delay': '0ms' } as React.CSSProperties}>
+            <span className="workspace-eyebrow">KEEP THE CONVERSATION GOING</span>
             <h1 className="text-xl font-bold tracking-tight text-text-0 font-display">Enquiries</h1>
             <p className="mt-1 text-[12.5px] text-text-2">
               {leads === null
@@ -118,7 +120,7 @@ export function Leads() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="workspace-actions flex items-center gap-2">
             <div className="relative">
               <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-3" />
               <input
@@ -156,6 +158,7 @@ export function Leads() {
 
       <div className="flex-1 overflow-y-auto px-6 py-6">
         <div className="max-w-5xl mx-auto">
+          {leads !== null && !error && <WorkspaceMetrics items={[{ label: 'Total enquiries', value: leads.length }, { label: 'New messages', value: newCount }, { label: 'Contacted', value: leads.filter((lead) => lead.status === 'contacted').length }]} />}
           {leads === null ? (
             <div className="py-24 text-center text-text-3">
               <Loader2 size={18} className="mx-auto animate-spin" />
@@ -164,15 +167,16 @@ export function Leads() {
             <div className="py-20 text-center">
               <p className="text-[13px] text-status-red">{error}</p>
               <p className="mt-2 text-[12px] text-text-3">
-                Start it with <code className="font-mono">npm run dev</code> in the server folder.
+                We could not load your enquiries. Please try Refresh in a moment.
               </p>
             </div>
           ) : visible.length === 0 ? (
-            <div className="py-20 text-center">
+            <div className="workspace-empty py-20 text-center">
               <Inbox size={20} className="mx-auto text-text-3" />
-              <p className="mt-3 text-[13px] text-text-1">
+              <h2>
                 {search ? 'No enquiry matches that search.' : 'No enquiries yet'}
-              </p>
+              </h2>
+              {search && <button className="studio-button secondary mt-4" onClick={() => setSearch('')}>Clear search</button>}
               {!search && (
                 <p className="mt-1 text-[12px] text-text-3">
                   Publish your site, and messages from its contact form appear here.
@@ -180,7 +184,7 @@ export function Leads() {
               )}
             </div>
           ) : (
-            <div className="rounded-xl border border-border-default overflow-hidden">
+            <div className="enquiries-table rounded-xl border border-border-default overflow-hidden" role="region" aria-label="Customer enquiries" tabIndex={0}>
               <table className="w-full text-left">
                 <thead className="bg-bg-2 border-b border-border-default">
                   <tr className="text-[11px] uppercase tracking-wide text-text-3">

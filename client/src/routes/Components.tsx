@@ -53,12 +53,13 @@ export function Components() {
   }
 
   return (
-    <div className="h-full overflow-y-auto">
+<div className="workspace-components h-full overflow-y-auto">
       {/* Header */}
-      <div className="px-4 md:px-12 pt-8">
+<div className="workspace-heading px-4 md:px-12 pt-8">
+        <span className="workspace-eyebrow">YOUR BUILDING BLOCKS</span>
         <h1 className="text-[22px] font-display font-semibold tracking-tight animate-fade-in-up stagger-1">Component Library</h1>
         <p className="text-text-2 text-[13px] mt-1 animate-fade-in-up stagger-2">
-          {blockMetadata.length} components across {categories.length} categories
+          {blockMetadata.length} components across {categories.length} categories. Preview a style, then add it to your page.
         </p>
       </div>
 
@@ -68,6 +69,7 @@ export function Components() {
           <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-3" />
           <input
             type="text"
+            aria-label="Search components"
             placeholder="Search components..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -107,6 +109,7 @@ export function Components() {
       </div>
 
       {/* Component grid */}
+      {filtered.length === 0 && <div className="workspace-empty mx-4 md:mx-12 mt-6"><Search size={24} className="mx-auto" /><h2>No components found</h2><p>Try another search or browse all categories.</p><button className="studio-button secondary mt-4" onClick={() => { setSearch(''); setActiveCategory(null) }}>Clear filters</button></div>}
       <div className="px-4 md:px-12 pt-6 pb-12 grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
         {filtered.map((meta, i) => {
           const variantIdx = activeVariants[meta.type] ?? 0

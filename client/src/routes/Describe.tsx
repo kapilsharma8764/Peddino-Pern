@@ -5,7 +5,8 @@ import { toast } from 'sonner'
 import { useBusinessStore } from '@/store/businessStore'
 import { useConfigStore } from '@/store/configStore'
 import { profileFromDescription } from '@/onboarding/from-description'
-import { buildTemplate, defaultTemplateFor } from '@/templates/library'
+import { buildTemplate } from '@/templates/library/types'
+import { loadStartingTemplate } from '@/services/templateApi'
 import { usePublishStore } from '@/store/publishStore'
 
 /**
@@ -35,14 +36,14 @@ export function Describe() {
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
 
-  function build() {
+  async function build() {
     const description = text.trim()
     if (!description) return
 
     setBusy(true)
     try {
       const profile = profileFromDescription(description)
-      const config = buildTemplate(defaultTemplateFor(profile.category), profile)
+      const config = buildTemplate(await loadStartingTemplate(profile.category), profile)
 
       reset()
       setProfile(profile)
@@ -58,8 +59,8 @@ export function Describe() {
   }
 
   return (
-    <div className="h-full overflow-y-auto">
-      <div className="relative max-w-2xl mx-auto px-6 py-12">
+<div className="workspace-tool-page h-full overflow-y-auto">
+<div className="workspace-tool-panel relative max-w-2xl mx-auto px-6 py-12">
         <div className="hero-backdrop" aria-hidden="true">
           <div className="hero-dots" />
           <div className="hero-orb hero-orb-1" />
@@ -135,7 +136,7 @@ export function Describe() {
 
           <button
             type="button"
-            onClick={build}
+            onClick={() => void build()}
             disabled={!text.trim() || busy}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-text-0 text-bg-0 text-[13px] font-semibold hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
           >

@@ -1,5 +1,6 @@
 import pg from 'pg'
 import { randomUUID, createHash } from 'node:crypto'
+import { applyMigrations } from './migrations.js'
 
 /**
  * Where the server keeps its data: PostgreSQL.
@@ -106,6 +107,9 @@ async function createTables(db) {
       ord integer NOT NULL,
       data jsonb NOT NULL
     )`)
+  // Everything newer than the tables above (content, layout templates, per-user
+  // data, rate limits) is a SQL file in server/migrations/.
+  await applyMigrations(db, SCHEMA)
 }
 
 /** The ready pool (tables created) — for the import scripts. */

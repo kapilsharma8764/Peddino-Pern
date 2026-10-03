@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Layers3 } from 'lucide-react'
 import { BRAND, legalPages } from '@/brand'
 import { Reveal } from '@/components/studio/Motion'
+import { useAuthStore } from '@/store/authStore'
 import './marketing.css'
 
 /**
@@ -10,7 +11,7 @@ import './marketing.css'
  * and ends with the shared footer. Entrances use the same `Reveal` as the home page, so they fire once
  * and are switched off for visitors who prefer reduced motion.
  */
-export function MarketingPage({ title, description, children }: { title: string; description: string; children: ReactNode }) {
+export function MarketingPage({ title, description, children, busy }: { title: string; description: string; children: ReactNode; busy?: boolean }) {
   useEffect(() => {
     const previous = document.title
     document.title = `${title} — ${BRAND.name}`
@@ -21,7 +22,7 @@ export function MarketingPage({ title, description, children }: { title: string;
   }, [title, description])
 
   return (
-    <div className="studio-landing mk h-full overflow-y-auto overflow-x-hidden" id="landing-scroll" data-mk-page>
+    <div className="studio-landing mk h-full overflow-y-auto overflow-x-hidden" id="landing-scroll" data-mk-page aria-busy={busy || undefined}>
       {children}
       <MarketingFooter />
     </div>
@@ -56,10 +57,10 @@ export function MarketingFooter() {
 /** Title block at the top of a page. */
 export function PageHero({ eyebrow, title, accent, lede, children }: { eyebrow: string; title: string; accent?: string; lede: string; children?: ReactNode }) {
   return (
-    <section className="mk-hero studio-container">
+    <section className="mk-hero studio-container" aria-label={eyebrow}>
       <i className="mk-glow mk-glow-a" aria-hidden="true" /><i className="mk-glow mk-glow-b" aria-hidden="true" />
       <Reveal className="mk-hero-inner">
-        <span className="mk-eyebrow">{eyebrow}</span>
+        <span className="mk-eyebrow mk-hero-label"><Layers3 size={14} />{eyebrow}</span>
         <h1>{title}{accent && <> <span className="mk-grad">{accent}</span></>}</h1>
         <p className="mk-lede">{lede}</p>
         {children}
@@ -111,10 +112,16 @@ export function CtaBand({ title, text, label = 'Start building', to = '/start', 
         <h2>{title}</h2>
         <p>{text}</p>
         <div className="mk-cta-actions">
-          <Link className="mk-btn mk-btn-primary" to={to}>{label} <ArrowRight size={16} /></Link>
+          <BuildLink className="mk-btn mk-btn-primary" to={to}>{label} <ArrowRight size={16} /></BuildLink>
           {secondary && <Link className="mk-btn mk-btn-ghost" to={secondary.to}>{secondary.label}</Link>}
         </div>
       </Reveal>
     </section>
   )
+}
+
+export function BuildLink({ to = '/start', className, children }: { to?: string; className: string; children: ReactNode }) {
+  const token = useAuthStore((state) => state.token)
+  const needsAccount = ['/start', '/create', '/build'].includes(to) && !token
+  return <Link className={className} to={needsAccount ? '/sign-in' : to} state={needsAccount ? { from: to } : undefined}>{children}</Link>
 }

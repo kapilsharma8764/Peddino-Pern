@@ -5,6 +5,7 @@ import { initBuilder } from '@/builder/core'
 import { api } from '@/lib/api'
 import { useBusinessStore } from '@/store/businessStore'
 import { usePublishStore } from '@/store/publishStore'
+import { starterDesignById, useWebsiteTypeMap } from '@/store/catalogStore'
 import { BusinessInfoForm } from './BusinessInfoForm'
 import { businessInfoErrors } from './business-info'
 import { DesignStyleSelector } from './DesignStyleSelector'
@@ -12,8 +13,7 @@ import { OnboardingShell } from './OnboardingShell'
 import { PageSelector } from './PageSelector'
 import { WebsiteTypeSelector } from './WebsiteTypeSelector'
 import { useOnboardingStore, type StartMode } from './onboardingStore'
-import { buildStarterSite, starterDesignMap } from './starter-designs'
-import { websiteTypeMap } from './website-types'
+import { buildStarterSite } from './starter-designs'
 
 /**
  * The setup before the editor opens, one component for both paths.
@@ -39,6 +39,7 @@ export function StartFlow() {
   const setType = useOnboardingStore((s) => s.setType)
   const setDesign = useOnboardingStore((s) => s.setDesign)
   const setPages = useOnboardingStore((s) => s.setPages)
+  const websiteTypeMap = useWebsiteTypeMap()
   const profile = useBusinessStore((s) => s.profile)
   const updateProfile = useBusinessStore((s) => s.update)
   const [showErrors, setShowErrors] = useState(false)
@@ -63,7 +64,7 @@ export function StartFlow() {
   }
 
   async function createSite() {
-    const design = designId ? starterDesignMap.get(designId) : undefined
+    const design = designId ? starterDesignById(designId) : undefined
     if (!design || building) return
     setBuilding(true)
     try {

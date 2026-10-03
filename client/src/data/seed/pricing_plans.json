@@ -1,0 +1,66 @@
+[
+  {
+    "slug": "free",
+    "name": "Free",
+    "price": 0,
+    "currency": "INR",
+    "priceLabel": "₹0",
+    "billingPeriod": null,
+    "description": "Everything you need to build and publish a website.",
+    "note": "Available now",
+    "features": [
+      "The full visual editor",
+      "200+ widgets and 75+ layouts",
+      "Templates for every kind of business",
+      "Desktop, tablet and mobile editing",
+      "Publish your site and export it as HTML or ZIP",
+      "Enquiries inbox"
+    ],
+    "ctaLabel": "Start free",
+    "ctaTo": "/start",
+    "featured": true,
+    "comingSoon": false,
+    "sortOrder": 10
+  },
+  {
+    "slug": "pro",
+    "name": "Pro",
+    "price": null,
+    "currency": "INR",
+    "priceLabel": "Coming soon",
+    "billingPeriod": null,
+    "description": "For businesses that want more. Tell us what you would like to see.",
+    "note": "Planned",
+    "features": [
+      "Everything in Free",
+      "Your own domain name (planned)",
+      "More space for sites and images (planned)",
+      "Priority help (planned)"
+    ],
+    "ctaLabel": "Tell us what you need",
+    "ctaTo": "/contact",
+    "featured": false,
+    "comingSoon": true,
+    "sortOrder": 20
+  },
+  {
+    "slug": "business",
+    "name": "Business",
+    "price": null,
+    "currency": "INR",
+    "priceLabel": "Let’s talk",
+    "billingPeriod": null,
+    "description": "Building websites for several clients? We would like to hear how you work.",
+    "note": "For teams and agencies",
+    "features": [
+      "Several sites under one account (planned)",
+      "Working together on a site (planned)",
+      "Help moving your existing site (on request)"
+    ],
+    "ctaLabel": "Contact us",
+    "ctaTo": "/contact",
+    "featured": false,
+    "comingSoon": true,
+    "sortOrder": 30
+  }
+]

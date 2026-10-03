@@ -1,14 +1,17 @@
 import { useMemo, useState } from 'react'
-import { Check, LayoutTemplate, Undo2 } from 'lucide-react'
+import { Check, LayoutTemplate, Loader2, Undo2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { useConfigStore } from '@/store/configStore'
 import { ensurePages } from '@/store/site-shape'
-import { templates, toBlocks } from '@/templates/library'
-import type { BlockConfig } from '@/blocks/types'
+import { toBlocks } from '@/templates/library/types'
+import { fetchLayoutTemplate, useLayoutOutline } from '@/services/templateApi'
 
 interface LayoutOption {
   key: string
   sourceName: string
-  blocks: BlockConfig[]
+  /** The template to read the sections from, and which of its pages (null: its home page). */
+  slug: string
+  pagePath: string | null
 }
 
 /**
@@ -18,9 +21,9 @@ interface LayoutOption {
  *
  * Alternate layouts are sourced from the template library's own pages: for
  * "Home" that's every template's home section set, for a named page (About,
- * Contact, …) it's every template's page of a matching name. There is no
- * separate "Layout 1/2/3" content to author — the 170+ real templates already
- * in the library are the layout catalogue.
+ * Contact, …) it's every template's page of a matching name. The list is built
+ * from the library's outline (names only); the sections of the one picked are
+ * fetched when it is picked.
  */
 export function PageTemplatePanel() {
   const activePageId = useConfigStore((s) => s.activePageId)
@@ -29,6 +32,8 @@ export function PageTemplatePanel() {
   const undo = useConfigStore((s) => s.undo)
   const canUndo = useConfigStore((s) => s.canUndo())
   const [query, setQuery] = useState('')
+  const [picking, setPicking] = useState<string | null>(null)
+  const outline = useLayoutOutline()
 
   const pages = ensurePages(config)
   const activePage = pages.find((p) => p.id === activePageId) ?? pages[0]
@@ -39,23 +44,38 @@ export function PageTemplatePanel() {
     const wanted = activePage.name.trim().toLowerCase()
     const siteName = config.name.trim().toLowerCase()
     const out: LayoutOption[] = []
-    for (const template of templates) {
+    for (const template of outline.data ?? []) {
       // Offering the site's own originating template back as an "alternate"
       // is a same-as-current no-op that only confuses the list.
       if (siteName && template.name.trim().toLowerCase() === siteName) continue
       if (isHome) {
-        if (template.home.length === 0) continue
-        out.push({ key: `${template.id}:home`, sourceName: template.name, blocks: toBlocks(template.home) })
+        if (template.homeSections === 0) continue
+        out.push({ key: `${template.slug}:home`, sourceName: template.name, slug: template.slug, pagePath: null })
         continue
       }
       const match = template.pages.find((page) => {
         const name = page.name.trim().toLowerCase()
         return name === wanted || name.includes(wanted) || wanted.includes(name)
       })
-      if (match) out.push({ key: `${template.id}:${match.path}`, sourceName: `${template.name} — ${match.name}`, blocks: toBlocks(match.sections) })
+      if (match) out.push({ key: `${template.slug}:${match.path}`, sourceName: `${template.name} — ${match.name}`, slug: template.slug, pagePath: match.path })
     }
     return out
-  }, [activePage, isHome, config.name])
+  }, [activePage, isHome, config.name, outline.data])
+
+  async function pick(option: LayoutOption) {
+    if (!activePage || picking) return
+    setPicking(option.key)
+    try {
+      const full = await fetchLayoutTemplate(option.slug)
+      const sections = option.pagePath === null ? full.home : full.pages.find((page) => page.path === option.pagePath)?.sections
+      if (!sections) throw new Error('That layout has no such page')
+      setPageBlocks(activePage.id, toBlocks(sections))
+    } catch {
+      toast.error('That layout could not be loaded. Please try again.')
+    } finally {
+      setPicking(null)
+    }
+  }
 
   const filtered = query.trim()
     ? options.filter((o) => o.sourceName.toLowerCase().includes(query.trim().toLowerCase()))
@@ -82,7 +102,11 @@ export function PageTemplatePanel() {
         />
       )}
 
-      {filtered.length === 0 ? (
+      {outline.status === 'loading' ? (
+        <p className="text-xs text-text-3 py-4 text-center" role="status">Loading layouts…</p>
+      ) : outline.status === 'error' ? (
+        <p className="text-xs text-text-3 py-4 text-center" role="alert">Layouts could not be loaded just now. Check your connection and reopen this panel.</p>
+      ) : filtered.length === 0 ? (
         <p className="text-xs text-text-3 py-4 text-center">
           No alternate "{activePage.name}" layouts found in the template library yet.
         </p>
@@ -92,11 +116,12 @@ export function PageTemplatePanel() {
             <button
               key={option.key}
               type="button"
-              onClick={() => setPageBlocks(activePage.id, option.blocks)}
-              className="flex items-center justify-between gap-2 text-left px-2.5 py-2 rounded-md border border-border-default bg-bg-2 hover:border-brand hover:bg-bg-3 transition-colors"
+              disabled={picking !== null}
+              onClick={() => void pick(option)}
+              className="flex items-center justify-between gap-2 text-left px-2.5 py-2 rounded-md border border-border-default bg-bg-2 hover:border-brand hover:bg-bg-3 transition-colors disabled:opacity-60"
             >
               <span className="text-xs text-text-1 truncate">{option.sourceName}</span>
-              <Check size={13} className="text-text-3 shrink-0" />
+              {picking === option.key ? <Loader2 size={13} className="text-text-3 shrink-0 animate-spin" /> : <Check size={13} className="text-text-3 shrink-0" />}
             </button>
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { ErrorBoundary } from './layout/ErrorBoundary'
 import { AppLayout } from './layout/AppLayout'
@@ -7,6 +7,8 @@ import { SignIn } from './routes/SignIn'
 import { useAuthStore } from './store/authStore'
 import { NotFound } from './routes/NotFound'
 import { useKeyboardShortcuts } from './lib/useKeyboardShortcuts'
+import { useUserSync } from './lib/user-sync'
+import { loadCatalog } from './store/catalogStore'
 
 // Each screen is its own chunk, so the first page (home or sign-in) does not pull in the editor,
 // the 189 template files and the widget library just to show a button.
@@ -62,6 +64,10 @@ function EditorEntry({ children }: { children: React.ReactNode }) {
 
 function AppRoutes() {
   useKeyboardShortcuts()
+  // Website types, starter designs and business presets come from the API; the bundled copy shows until then.
+  useEffect(() => { void loadCatalog() }, [])
+  // A signed-in person's brief and setup progress follow their account across devices.
+  useUserSync()
 
   return (
     <Suspense fallback={<div className="grid h-full min-h-[40vh] place-items-center text-sm text-slate-500" role="status">Loading…</div>}>

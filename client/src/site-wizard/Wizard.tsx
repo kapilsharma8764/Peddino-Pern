@@ -91,7 +91,7 @@ export function Wizard() {
   const canNext = step === 0 ? false : Boolean(spec)
 
   return (
-    <div className="h-full overflow-y-auto bg-bg-0 text-text-0">
+<div className="wizard-page h-full overflow-y-auto bg-bg-0 text-text-0">
       <div className="mx-auto max-w-6xl px-5 py-8">
         <div className="mb-6 flex flex-wrap items-center gap-2">
           {STEPS.map((label, i) => (

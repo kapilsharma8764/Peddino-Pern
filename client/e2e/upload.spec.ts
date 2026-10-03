@@ -95,6 +95,7 @@ test('an uploaded page is editable, not a slab of markup', async ({ page }) => {
   await expect(page.getByLabel('Text', { exact: true })).toHaveValue('Verma Dental Clinic')
 
   await page.getByLabel('Text', { exact: true }).fill('Verma Family Dental')
+  await page.getByLabel('Text', { exact: true }).press('Tab')
   await expect(heading).toHaveText('Verma Family Dental')
 })
 

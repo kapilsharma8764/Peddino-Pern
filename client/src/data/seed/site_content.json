@@ -1,0 +1,210 @@
+[
+  {
+    "pageKey": "features", "sectionKey": "hero", "sortOrder": 10,
+    "title": "Everything you need to",
+    "subtitle": "{brand} gives you a visual editor, ready-made templates and a library of building blocks. Start from a design or from a blank page, and change anything by clicking it.",
+    "content": { "eyebrow": "FEATURES", "accent": "build your website." }
+  },
+  {
+    "pageKey": "features", "sectionKey": "proof", "sortOrder": 20, "title": "", "subtitle": "",
+    "content": { "items": [
+      { "icon": "Check", "text": "No coding needed" },
+      { "icon": "MonitorSmartphone", "text": "Three preview sizes" },
+      { "icon": "Download", "text": "Yours to export" }
+    ] }
+  },
+  {
+    "pageKey": "features", "sectionKey": "build", "sortOrder": 30,
+    "title": "A real visual editor",
+    "subtitle": "Click text, an image or a button on the page and edit it right there. Nothing to install and no code to touch.",
+    "content": { "eyebrow": "BUILD", "columns": 3, "items": [
+      { "icon": "MousePointer2", "title": "Click to edit", "text": "Change words, photos, links and buttons directly on the page, with undo and redo whenever you need them." },
+      { "icon": "LayoutGrid", "title": "200+ widgets", "text": "Headings, forms, galleries, pricing, FAQs, calculators and more, searchable and sorted into categories." },
+      { "icon": "PanelsTopLeft", "title": "Layouts that start empty", "text": "Pick a column, grid, sidebar or hero layout and fill each place with your own widgets. 75+ layouts, no fake content." },
+      { "icon": "Layers3", "title": "Page structures", "text": "Business, education, portfolio, shop and service skeletons: labelled empty sections you complete yourself." },
+      { "icon": "Type", "title": "Headers and footers", "text": "Choose from many header and footer styles. They are shared, so one change updates every page, and the menu follows your pages." },
+      { "icon": "MonitorSmartphone", "title": "Desktop, tablet, mobile", "text": "Switch the preview size as you work. Columns stack on phones and become two columns on tablets." }
+    ] }
+  },
+  {
+    "pageKey": "features", "sectionKey": "design", "sortOrder": 40,
+    "title": "Make it look like you", "subtitle": "",
+    "content": { "eyebrow": "DESIGN", "tone": "soft", "columns": 3, "items": [
+      { "icon": "LayoutTemplate", "title": "Ready-made templates", "text": "Browse templates by kind of business, preview them on three screen sizes, and open one in the editor with your details filled in." },
+      { "icon": "Palette", "title": "Colours at three levels", "text": "Change colours for the whole site, for one page, or for a single section. Header and footer colours too." },
+      { "icon": "Wand2", "title": "Starting designs", "text": "Choose a look first, then pick your pages. You get a working starter site to change, not an empty screen." }
+    ] }
+  },
+  {
+    "pageKey": "features", "sectionKey": "publish", "sortOrder": 50,
+    "title": "Take it live, or take it with you", "subtitle": "",
+    "content": { "eyebrow": "PUBLISH", "columns": 3, "items": [
+      { "icon": "Rocket", "title": "Publish", "text": "Publish your site to its own address and update it any time by editing and publishing again." },
+      { "icon": "Download", "title": "Export", "text": "Download your whole site as HTML files or a ZIP and host it wherever you like. What you export matches the editor." },
+      { "icon": "Inbox", "title": "Enquiries inbox", "text": "Contact forms on your site send messages to an Enquiries page in your workspace." }
+    ] }
+  },
+  {
+    "pageKey": "features", "sectionKey": "cta", "sortOrder": 60,
+    "title": "See it for yourself",
+    "subtitle": "Start with a template or a blank page. It takes a few minutes to have something real on screen.",
+    "content": { "secondaryLabel": "Read the help centre", "secondaryTo": "/help" }
+  },
+
+  {
+    "pageKey": "how-it-works", "sectionKey": "hero", "sortOrder": 10,
+    "title": "From idea to website in",
+    "subtitle": "No code, no waiting. Answer a few questions, choose a starting point, then edit the page the way you would edit a document.",
+    "content": { "eyebrow": "HOW IT WORKS", "accent": "five steps." }
+  },
+  {
+    "pageKey": "how-it-works", "sectionKey": "steps", "sortOrder": 20, "title": "", "subtitle": "",
+    "content": { "items": [
+      { "label": "Your idea", "title": "Tell us what you are building", "text": "Choose the kind of website: business, school, restaurant, portfolio and more. This decides which designs and pages we suggest first." },
+      { "label": "Your details", "title": "Add your business details", "text": "Name, a short description, and, if you want, a tagline, contact details and a logo. We reuse them everywhere so you never type them twice." },
+      { "label": "Your design", "title": "Pick how to start", "text": "Two ways in, and you can switch later.", "points": ["Choose a template: browse designs for your kind of business, preview them, and open one.", "Create a site: choose a starting design and your pages, then build the rest with 200+ widgets."] },
+      { "label": "Make it yours", "title": "Edit visually", "text": "Click anything to change it. Add sections from the layout list, drop widgets in, and set your colours. Check desktop, tablet and mobile as you go." },
+      { "label": "Go live", "title": "Preview and publish", "text": "Preview your pages, then publish or download the site. Your project stays in your workspace so you can come back and change it." }
+    ] }
+  },
+  {
+    "pageKey": "how-it-works", "sectionKey": "cta", "sortOrder": 30,
+    "title": "Ready for step one?",
+    "subtitle": "It starts with a single question: what kind of website do you want?",
+    "content": { "secondaryLabel": "Compare plans", "secondaryTo": "/pricing" }
+  },
+
+  {
+    "pageKey": "about", "sectionKey": "hero", "sortOrder": 10,
+    "title": "We’re {short}.",
+    "subtitle": "Most small businesses need a good website and have neither the time nor the budget for a developer. We build the tool that closes that gap.",
+    "content": { "eyebrow": "ABOUT", "accent": "We make websites simple." }
+  },
+  {
+    "pageKey": "about", "sectionKey": "mission", "sortOrder": 20,
+    "title": "Good websites should be within reach.",
+    "subtitle": "Give people the tools to tell their story online, with the freedom to make it their own.",
+    "content": { "eyebrow": "OUR MISSION", "tone": "soft", "stats": [
+      { "value": "200+", "label": "Widgets to build with" },
+      { "value": "75+", "label": "Layouts to start from" },
+      { "value": "3", "label": "Screen sizes to preview" },
+      { "value": "Yours", "label": "Your site, ready to export" }
+    ] }
+  },
+  {
+    "pageKey": "about", "sectionKey": "why", "sortOrder": 30,
+    "title": "Why we built this", "subtitle": "",
+    "content": { "paragraphs": [
+      "A shop owner, a school, a coaching class or a freelancer should be able to put a clear, good-looking website online in an afternoon. Too many builders ask you to learn their jargon first, or hide the useful parts behind a wall of templates you cannot change.",
+      "{brand} starts from a different idea: tell us what you do, pick a starting point, and change anything by clicking it. Layouts begin empty, templates stay fully editable, and your site is yours to take away."
+    ] }
+  },
+  {
+    "pageKey": "about", "sectionKey": "care", "sortOrder": 40,
+    "title": "What we care about", "subtitle": "",
+    "content": { "columns": 2, "items": [
+      { "icon": "Sparkles", "title": "Simple first", "text": "Plain words instead of technical terms, and one clear next step on every screen." },
+      { "icon": "Heart", "title": "Made for small teams", "text": "Built around the sites small businesses, schools and individuals actually need." },
+      { "icon": "ShieldCheck", "title": "Yours to keep", "text": "Export your whole site any time. No lock-in." },
+      { "icon": "Globe2", "title": "Works everywhere", "text": "Sites that look right on phones, tablets and computers." }
+    ] }
+  },
+  {
+    "pageKey": "about", "sectionKey": "cta", "sortOrder": 50,
+    "title": "Build something with us",
+    "subtitle": "Have an idea, a question or a feature you wish existed? We would like to hear it.",
+    "content": { "label": "Start building", "secondaryLabel": "Get in touch", "secondaryTo": "/contact" }
+  },
+
+  {
+    "pageKey": "help", "sectionKey": "hero", "sortOrder": 10,
+    "title": "Quick answers,",
+    "subtitle": "How to start, how to edit, and how to publish. Can’t find what you need? Write to us.",
+    "content": { "eyebrow": "HELP CENTRE", "accent": "in plain words." }
+  },
+  {
+    "pageKey": "help", "sectionKey": "start", "sortOrder": 20,
+    "title": "", "subtitle": "",
+    "content": { "eyebrow": "GETTING STARTED", "columns": 3, "items": [
+      { "icon": "Rocket", "title": "Create your account", "text": "Sign up with your email or Google. Your sites are saved to your workspace." },
+      { "icon": "LayoutTemplate", "title": "Choose how to start", "text": "From the start page pick “Choose a template” or “Create a site”." },
+      { "icon": "MousePointer2", "title": "Edit by clicking", "text": "Click text, images or buttons on the page. The panel on the right shows what you can change." }
+    ] }
+  },
+  {
+    "pageKey": "help", "sectionKey": "faq", "sortOrder": 30,
+    "title": "Frequently asked", "subtitle": "",
+    "content": { "eyebrow": "QUESTIONS", "topics": ["Getting started", "Editing & design", "Publishing & export"], "items": [
+      { "topic": "Getting started", "question": "Do I need to know how to code?", "answer": "No. You edit by clicking, and everything is built from ready blocks you can move and style." },
+      { "topic": "Getting started", "question": "What is the difference between a template and a layout?", "answer": "A template is a finished, designed website. A layout is an empty skeleton, such as two columns or a sidebar, that you fill with widgets of your own." },
+      { "topic": "Editing & design", "question": "How do I add a page?", "answer": "Open the Pages tab in the editor and press +. Name the page, and it appears in your header menu automatically." },
+      { "topic": "Editing & design", "question": "How do I change my colours?", "answer": "Use Theme colours for the whole site, Page colours for one page, and Style for a single section." },
+      { "topic": "Editing & design", "question": "Will my site work on phones?", "answer": "Yes. Use the Desktop, Tablet and Mobile buttons at the top of the editor to check each size as you work." },
+      { "topic": "Publishing & export", "question": "How do I publish?", "answer": "Use the publish or download buttons in the editor. You can also export the site as HTML files or a ZIP to host yourself." },
+      { "topic": "Publishing & export", "question": "Where do contact-form messages go?", "answer": "To the Enquiries page in your workspace." },
+      { "topic": "Editing & design", "question": "Can I undo a mistake?", "answer": "Yes. Use Undo and Redo at the top, or the keyboard shortcuts. Replacing a page’s layout always asks first, and you can undo it." },
+      { "topic": "Publishing & export", "question": "Who owns my website?", "answer": "You do. You can download all of it whenever you like." }
+    ] }
+  },
+  {
+    "pageKey": "help", "sectionKey": "more", "sortOrder": 40,
+    "title": "Keep your next step simple", "subtitle": "",
+    "content": { "eyebrow": "A LITTLE MORE HELP", "tone": "soft", "columns": 2, "items": [
+      { "icon": "MessageSquare", "title": "Talk to us", "text": "Tell us what you are trying to do and where you got stuck.", "linkLabel": "Contact support", "linkTo": "/contact" },
+      { "icon": "Rocket", "title": "See the whole process", "text": "Follow the five steps from your first idea to a published site.", "linkLabel": "How it works", "linkTo": "/how-it-works" }
+    ] }
+  },
+  {
+    "pageKey": "help", "sectionKey": "cta", "sortOrder": 50,
+    "title": "Still stuck?",
+    "subtitle": "Send us a message and tell us what you were trying to do.",
+    "content": { "label": "Contact us", "to": "/contact" }
+  },
+
+  {
+    "pageKey": "pricing", "sectionKey": "hero", "sortOrder": 10,
+    "title": "Free to start.",
+    "subtitle": "You can build, publish and export a website today at no cost. Paid plans are still being planned, and we list only what is real.",
+    "content": { "eyebrow": "PRICING", "accent": "Honest about what’s next." }
+  },
+  {
+    "pageKey": "pricing", "sectionKey": "comparison", "sortOrder": 20,
+    "title": "What is available today",
+    "subtitle": "The Free plan is ready to use. Pro and Business features marked planned are not available yet.",
+    "content": { "eyebrow": "AT A GLANCE", "tone": "soft", "columns": ["Free", "Pro", "Business"], "rows": [
+      ["Visual editor, widgets and templates", "Included", "Planned", "Planned"],
+      ["Responsive preview", "Included", "Planned", "Planned"],
+      ["Publish and HTML / ZIP export", "Included", "Planned", "Planned"],
+      ["Enquiries inbox", "Included", "Planned", "Planned"],
+      ["Custom domain", "—", "Planned", "Planned"],
+      ["Team collaboration", "—", "—", "Planned"]
+    ] }
+  },
+  {
+    "pageKey": "pricing", "sectionKey": "faq", "sortOrder": 30,
+    "title": "About pricing", "subtitle": "",
+    "content": { "eyebrow": "QUESTIONS", "items": [
+      ["Is the free plan really free?", "Yes. You can build, publish and export websites without paying. There is no card needed to start."],
+      ["What will paid plans include?", "The items marked “planned” above are what we are working towards. Nothing marked planned is available yet, and we will say so plainly when it is."],
+      ["Can I take my website with me?", "Yes. You can download your site as HTML files or a ZIP and host it anywhere."],
+      ["Who do I ask about teams or agencies?", "Use the contact form and tell us how you work. We read every message."]
+    ] }
+  },
+  {
+    "pageKey": "pricing", "sectionKey": "cta", "sortOrder": 40,
+    "title": "Your first website starts here",
+    "subtitle": "Explore the full editor, publish your site and keep a copy. No payment card needed.",
+    "content": { "label": "Start free", "secondaryLabel": "Ask about a plan", "secondaryTo": "/contact" }
+  },
+
+  {
+    "pageKey": "home", "sectionKey": "faq", "sortOrder": 10,
+    "title": "A little clarity.", "subtitle": "",
+    "content": { "items": [
+      ["Do I need to know how to code?", "No. Start with your business details or a short description, choose a template, and edit visually. You can change text, images, layouts and colours in the editor."],
+      ["Can I use my own website design?", "Yes. Import an HTML file or a website ZIP from the template library. You can also start with one of the ready-to-edit designs and make it your own."],
+      ["Will my website work on mobile?", "The templates include responsive layouts. Use the desktop, tablet and mobile previews to check your content and refine it before publishing."],
+      ["Can I update my website after publishing?", "Yes. Open your saved site, make changes in the editor, and publish again. Your website and customer enquiries stay together in your workspace."]
+    ] }
+  }
+]

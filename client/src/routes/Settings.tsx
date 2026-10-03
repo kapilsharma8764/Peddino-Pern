@@ -110,11 +110,11 @@ function SeoPanel({ settings }: { settings: ReturnType<typeof useSettingsState> 
       <FieldGroup label="OG Image URL"><ControlledInput settingsKey="ogImageUrl" placeholder="https://example.com/og.png" settings={settings} /></FieldGroup>
 
       {/* Live Google preview */}
-      <div className="mt-6 p-4 rounded-xl bg-bg-2 border border-border-default">
+<div className="seo-preview mt-6 p-4 rounded-xl bg-bg-2 border border-border-default">
         <div className="text-[10px] font-semibold uppercase tracking-wider text-text-3 mb-3">Google Preview</div>
-        <div className="text-[#8ab4f8] text-sm hover:underline cursor-pointer">{title}</div>
-        <div className="text-[#bdc1c6] text-[11px] mt-0.5">https://{domain}</div>
-        <div className="text-[#9aa0a6] text-[11.5px] mt-1 leading-relaxed">
+<div className="seo-preview-title text-sm">{title}</div>
+<div className="seo-preview-url text-[11px] mt-0.5">https://{domain}</div>
+<div className="seo-preview-description text-[11.5px] mt-1 leading-relaxed">
           {description}
         </div>
       </div>
@@ -214,12 +214,13 @@ export function Settings() {
   }
 
   return (
-    <div className="h-full flex flex-col md:flex-row overflow-hidden">
+<div className="workspace-settings h-full flex flex-col md:flex-row overflow-hidden">
       {/* Sidebar */}
-      <div className="md:w-52 bg-bg-1 border-b md:border-b-0 md:border-r border-border-default p-2 shrink-0 flex md:flex-col gap-1 overflow-x-auto">
+<div className="settings-sidebar md:w-52 bg-bg-1 border-b md:border-b-0 md:border-r border-border-default p-2 shrink-0 flex md:flex-col gap-1 overflow-x-auto" role="group" aria-label="Settings sections">
         {tabDefs.map(({ value, label, icon: Icon }, i) => (
           <button
             key={value}
+            aria-pressed={activeTab === value}
             onClick={() => setActiveTab(value)}
             style={{ animationDelay: `${i * 40}ms` }}
             className={`shrink-0 md:w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[12.5px] transition-all text-left animate-fade-in-up ${
@@ -235,7 +236,8 @@ export function Settings() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-8 max-w-2xl relative">
+<div className="settings-content flex-1 overflow-y-auto p-4 md:p-8 max-w-2xl relative">
+        <header className="workspace-heading"><span className="workspace-eyebrow">MAKE IT YOURS</span><h1>Settings</h1><p>Manage your website details, search appearance and AI connections. Changes save as you go.</p></header>
         {settings.showSaved && (
           <div className="absolute top-3 right-6 flex items-center gap-1.5 text-brand text-[11px] animate-fade-in">
             <Check size={12} />

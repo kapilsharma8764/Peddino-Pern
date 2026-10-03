@@ -6,6 +6,7 @@ import { ShortcutsModal } from '@/editor/ShortcutsModal'
 import { AmbientBackground } from '@/components/studio/Motion'
 import { MotionContext } from '@/components/studio/motion-context'
 import { marketingPaths } from '@/brand'
+import '@/interior.css'
 
 export function AppLayout() {
   const location = useLocation()
@@ -25,7 +26,7 @@ export function AppLayout() {
   }, [location, paused])
   const isCreate = location.pathname === '/create' || location.pathname === '/start'
   return <MotionContext.Provider value={{ paused, toggle: () => setPaused((value) => !value) }}>
-    <div className={`app-shell ${editor ? 'editor-shell' : 'studio-shell'} ${marketing ? 'marketing-shell' : (isCreate ? 'studio-shell create-shell' : 'workspace-shell')}`} data-motion={paused ? 'paused' : 'running'}>
+    <div className={`app-shell ${editor ? 'editor-shell' : 'studio-shell'} ${marketing ? 'marketing-shell' : (isCreate ? 'studio-shell create-shell' : 'workspace-shell')}${location.pathname !== '/' ? ' interior-shell' : ''}`} data-motion={paused ? 'paused' : 'running'}>
       <a href="#main-content" className="skip-to-content">Skip to content</a>
       {!editor && <AmbientBackground />}
       {!editor && <TopNav />}

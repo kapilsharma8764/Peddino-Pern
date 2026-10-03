@@ -2,7 +2,8 @@ import { ImportedTemplates } from './ImportedTemplates'
 import { TemplateOptions } from './TemplateOptions'
 import { OnboardingProgress } from '@/start/OnboardingShell'
 import { useOnboardingStore } from '@/start/onboardingStore'
-import { typeScore, websiteTypeMap } from '@/start/website-types'
+import { typeScore } from '@/start/website-types'
+import { useWebsiteTypeMap } from '@/store/catalogStore'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, Check, Eye, FileUp, Loader2, Monitor, Search, Smartphone, Tablet, X } from 'lucide-react'
@@ -15,7 +16,8 @@ import { useBusinessStore } from '@/store/businessStore'
 import { categoryOptions } from '@/onboarding/profile'
 import { categoryMatches } from '@/lib/category'
 import { api } from '@/lib/api'
-import { templates as layoutTemplates, buildTemplate, type RealTemplate } from '@/templates/library'
+import { buildTemplate, type RealTemplate } from '@/templates/library/types'
+import { fetchLayoutTemplate, useLayoutTemplates, type LayoutTemplateSummary } from '@/services/templateApi'
 import { SitePreview } from '@/builder/SitePreview'
 
 /**
@@ -26,7 +28,7 @@ import { SitePreview } from '@/builder/SitePreview'
  */
 type Entry =
   | { kind: 'original'; id: string; name: string; category: string; template: OriginalTemplate }
-  | { kind: 'layout'; id: string; name: string; category: string; template: RealTemplate }
+  | { kind: 'layout'; id: string; name: string; category: string; template: LayoutTemplateSummary }
 
 /**
  * A layout imported from a download shares its identity with that download's
@@ -39,7 +41,7 @@ function designKey(id: string): string {
 }
 
 /** Everything in one category, originals first, with a layout hidden when its original is already listed. */
-function entriesFor(originals: OriginalTemplate[], category: string): Entry[] {
+function entriesFor(originals: OriginalTemplate[], layoutTemplates: LayoutTemplateSummary[], category: string): Entry[] {
   const all = category === 'all'
   const own: Entry[] = originals
     .filter(t => all || categoryMatches(t.category, category))
@@ -47,10 +49,10 @@ function entriesFor(originals: OriginalTemplate[], category: string): Entry[] {
   const seen = new Set(own.map(e => designKey((e.template as OriginalTemplate).id)))
   const layouts: Entry[] = []
   for (const t of layoutTemplates) {
-    const key = designKey(t.id)
+    const key = designKey(t.slug)
     if (seen.has(key) || !(all || categoryMatches(t.category, category))) continue
     seen.add(key)
-    layouts.push({ kind: 'layout', id: `layout:${t.id}`, name: t.name, category: t.category, template: t })
+    layouts.push({ kind: 'layout', id: `layout:${t.slug}`, name: t.name, category: t.category, template: t })
   }
   return [...own, ...layouts]
 }
@@ -112,7 +114,30 @@ function layoutPages(template: RealTemplate) {
   return [{ name: 'Home' }, ...template.pages.map(p => ({ name: p.name }))]
 }
 
-function LayoutPreviewDialog({ template, busy, onClose, onUse }: { template: RealTemplate; busy: boolean; onClose: () => void; onUse: () => void }) {
+/** What a gallery card draws: the design's theme, header and first sections, from the light list. */
+function previewOf(summary: LayoutTemplateSummary): RealTemplate {
+  return { id: summary.slug, name: summary.name, description: summary.description, category: summary.category as RealTemplate['category'], source: summary.source, theme: summary.preview.theme as RealTemplate['theme'], header: summary.preview.header, home: summary.preview.home, pages: [], footer: [] }
+}
+
+/** Opens a layout preview: the full template is fetched now, not with the gallery list. */
+function LayoutPreviewDialog({ summary, busy, onClose, onUse }: { summary: LayoutTemplateSummary; busy: boolean; onClose: () => void; onUse: () => void }) {
+  const [full, setFull] = useState<RealTemplate | null>(null)
+  const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    const controller = new AbortController()
+    fetchLayoutTemplate(summary.slug, controller.signal).then(setFull, () => { if (!controller.signal.aborted) setFailed(true) })
+    return () => controller.abort()
+  }, [summary.slug])
+  if (!full) {
+    return <div role="dialog" aria-modal="true" aria-label={`${summary.name} preview`} className="fixed inset-0 z-50 bg-bg-0 flex flex-col items-center justify-center gap-4">
+      {failed ? <><p className="text-sm text-text-1">This design could not be loaded just now.</p><button onClick={onClose} className="studio-button secondary !py-2 !px-4">Close</button></>
+        : <><Loader2 size={22} className="animate-spin text-text-2" /><p className="text-sm text-text-2">Loading {summary.name}…</p><button onClick={onClose} className="text-xs text-text-2 underline">Cancel</button></>}
+    </div>
+  }
+  return <LayoutPreviewFrame template={full} busy={busy} onClose={onClose} onUse={onUse} />
+}
+
+function LayoutPreviewFrame({ template, busy, onClose, onUse }: { template: RealTemplate; busy: boolean; onClose: () => void; onUse: () => void }) {
   const [device, setDevice] = useState<keyof typeof devices>('desktop')
   const [pageIndex, setPageIndex] = useState(0)
   const closeRef = useRef<HTMLButtonElement>(null)
@@ -142,17 +167,17 @@ function LayoutPreviewDialog({ template, busy, onClose, onUse }: { template: Rea
   </div>
 }
 
-function LayoutCard({ template, applying, onPreview, onUse }: { template: RealTemplate; applying: boolean; onPreview: () => void; onUse: () => void }) {
-  const pageCount = 1 + template.pages.length
+function LayoutCard({ template, applying, onPreview, onUse }: { template: LayoutTemplateSummary; applying: boolean; onPreview: () => void; onUse: () => void }) {
+  const pageCount = template.pageCount
   const previewBlocks = useMemo(() => {
-    const built = buildTemplate(template)
+    const built = buildTemplate(previewOf(template))
     return [...(built.header ?? []), ...built.blocks]
   }, [template])
   return (
     <article className="group rounded-xl overflow-hidden border border-border-default bg-bg-1 hover:border-brand/50 hover:shadow-xl hover:shadow-brand/5 transition-all duration-300">
       <div className="relative w-full aspect-[1280/900] overflow-hidden bg-bg-2">
         <button onClick={onPreview} aria-label={`Preview ${template.name}`} className="block w-full h-full cursor-pointer relative">
-          <SitePreview theme={template.theme} blocks={previewBlocks} fitWidth width={1280} />
+          <SitePreview theme={template.preview.theme} blocks={previewBlocks} fitWidth width={1280} />
         </button>
       </div>
       <div className="p-4">
@@ -243,6 +268,8 @@ function TemplateCard({
 
 export function Templates() {
   const originalTemplates = useOriginalTemplates()
+  const layoutList = useLayoutTemplates()
+  const layoutTemplates = useMemo(() => layoutList.data ?? [], [layoutList.data])
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
   const query = params.get('search') ?? ''
@@ -255,18 +282,19 @@ export function Templates() {
   const category = params.get('category') ?? profile.category ?? 'all'
   // Arrived from "Choose a template": the website type ranks the most fitting designs first.
   const fromStart = params.get('from') === 'start'
+  const websiteTypeMap = useWebsiteTypeMap()
   const websiteType = websiteTypeMap.get(useOnboardingStore((s) => s.typeId) ?? '')
   const style = params.get('style') ?? 'all'
   const requestedPage = Math.max(1, Number(params.get('page')) || 1)
   const [previewing, setPreviewing] = useState<Entry | null>(null)
   const [applying, setApplying] = useState<string | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
-  const inCategory = useMemo(() => entriesFor(originalTemplates, category), [originalTemplates, category])
+  const inCategory = useMemo(() => entriesFor(originalTemplates, layoutTemplates, category), [originalTemplates, layoutTemplates, category])
   const counts = useMemo(() => {
-    const byCategory: Record<string, number> = { all: entriesFor(originalTemplates, 'all').length }
-    for (const option of categoryOptions) byCategory[option.value] = entriesFor(originalTemplates, option.value).length
+    const byCategory: Record<string, number> = { all: entriesFor(originalTemplates, layoutTemplates, 'all').length }
+    for (const option of categoryOptions) byCategory[option.value] = entriesFor(originalTemplates, layoutTemplates, option.value).length
     return byCategory
-  }, [originalTemplates])
+  }, [originalTemplates, layoutTemplates])
   const visible = useMemo(() => inCategory.filter(entry => {
     // Layouts have no collection of their own, so they only appear under "All templates".
     if (collection !== 'all' && (entry.kind === 'layout' || !entry.template.collections.includes(collection))) return false
@@ -293,7 +321,7 @@ export function Templates() {
     const template = entry.template
     setApplying(entry.id)
     try {
-      const config = entry.kind === 'original' ? await loadOriginalTemplate(entry.template, profile) : buildTemplate(entry.template, profile)
+      const config = entry.kind === 'original' ? await loadOriginalTemplate(entry.template, profile) : buildTemplate(await fetchLayoutTemplate(entry.template.slug), profile)
       initBuilder(config)
       usePublishStore.getState().clear()
       try {
@@ -306,7 +334,7 @@ export function Templates() {
     finally { setApplying(null) }
   }
   return <div className="h-full flex flex-col overflow-hidden">
-    <div className="shrink-0 px-5 pt-6 pb-4 border-b border-border-default"><div className="max-w-6xl mx-auto">
+<div className="workspace-page-header shrink-0 px-5 pt-6 pb-4 border-b border-border-default"><div className="max-w-6xl mx-auto">
       {fromStart && <div className="mb-5"><OnboardingProgress steps={TEMPLATE_STEPS} current={2} /></div>}
       <button onClick={() => navigate(fromStart ? '/start/template/details' : '/create')} className="inline-flex items-center gap-2 text-xs text-text-2"><ArrowLeft size={14} /> Back to details</button>
       <div className="flex flex-wrap justify-between items-end gap-4 mt-4"><div><span className="studio-eyebrow">THE ORIGINAL COLLECTION</span><h1 className="text-3xl font-semibold mt-2">Find your starting point.</h1><p className="text-xs text-text-2 mt-2">{counts.all} templates. Original designs and widget-based layouts. Their own layouts, colours and images. Click to change text, photos, menus and colours. No coding needed.</p></div><button onClick={() => navigate('/upload')} className="studio-button secondary !py-2 !px-3"><FileUp size={14} /> Upload a site</button></div>
@@ -329,6 +357,8 @@ export function Templates() {
         })}
       </div>
       <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Template collections">{collections.map(([key, label]) => <button key={key} aria-pressed={collection === key} onClick={() => filter('collection', key)} className={`shrink-0 px-3 py-2 rounded-lg border text-xs ${collection === key ? 'bg-brand text-bg-0 border-brand' : 'border-border-default text-text-2'}`}>{label} <span className="opacity-60 ml-1">{key === 'all' ? inCategory.length : inCategory.filter(e => e.kind === 'original' && e.template.collections.includes(key)).length}</span></button>)}</div></div>
+      {layoutList.status === 'error' && <p className="text-xs text-text-2 mb-3 rounded-lg border border-border-default bg-bg-1 px-3 py-2" role="status">The widget-based layouts could not be loaded just now, so only the original designs are shown. Refresh to try again.</p>}
+      {layoutList.status === 'loading' && <p className="text-xs text-text-3 mb-3" role="status">Loading more designs…</p>}
       <p className="text-xs text-text-3 mb-4" aria-live="polite">{visible.length ? `${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, visible.length)} of ${visible.length} templates` : category !== 'all' ? `No templates found in ${categoryOptions.find(c => c.value === category)?.label ?? category} yet.` : 'No templates match your search.'}</p>
       {visible.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border-default py-16 px-6 text-center">
@@ -364,7 +394,7 @@ export function Templates() {
       {pageCount > 1 && <nav aria-label="Template pages" className="flex items-center justify-center gap-5 py-8"><button disabled={page === 1} onClick={() => filter('page', String(page - 1))} className="studio-button secondary !py-2">Previous</button><span className="text-xs text-text-2">Page {page} of {pageCount}</span><button disabled={page === pageCount} onClick={() => filter('page', String(page + 1))} className="studio-button secondary !py-2">Next</button></nav>}
     </div></div>
     {previewing?.kind === 'original' && <PreviewDialog template={previewing.template} busy={applying !== null} onClose={() => setPreviewing(null)} onUse={() => void use(previewing)} />}
-    {previewing?.kind === 'layout' && <LayoutPreviewDialog template={previewing.template} busy={applying !== null} onClose={() => setPreviewing(null)} onUse={() => void use(previewing)} />}
+    {previewing?.kind === 'layout' && <LayoutPreviewDialog summary={previewing.template} busy={applying !== null} onClose={() => setPreviewing(null)} onUse={() => void use(previewing)} />}
   </div>
 }
 

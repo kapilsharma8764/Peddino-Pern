@@ -138,8 +138,8 @@ export function UploadSite() {
   }
 
   return (
-    <div className="h-full overflow-y-auto">
-      <div className="max-w-2xl mx-auto px-6 py-10">
+<div className="workspace-tool-page h-full overflow-y-auto">
+<div className="workspace-tool-panel max-w-2xl mx-auto px-6 py-10">
         {/* Reached from the home page as well as from the template chooser, so
             the way out is wherever they came from rather than a fixed screen. */}
         <button
@@ -184,7 +184,7 @@ export function UploadSite() {
             const file = event.dataTransfer.files[0]
             if (file) void read(file)
           }}
-          className={`mt-6 block rounded-xl border border-dashed px-6 py-12 text-center cursor-pointer transition-colors ${
+className={`upload-dropzone mt-6 block rounded-xl border border-dashed px-6 py-12 text-center cursor-pointer transition-colors ${
             dragging ? 'border-brand bg-brand/5' : 'border-border-default hover:border-border-hover'
           }`}
         >

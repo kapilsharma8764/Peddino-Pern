@@ -17,6 +17,10 @@ import {
   verifyPassword,
 } from './auth.js'
 import { registerAiRoutes } from './ai.js'
+import { PgRateLimitStore } from './rate-limit-store.js'
+import { registerCatalogRoutes } from './routes/catalog.js'
+import { registerLayoutTemplateRoutes } from './routes/layout-templates.js'
+import { registerMeRoutes } from './routes/me.js'
 import { cachedFor } from './ttl-cache.js'
 import { createViewCounter } from './views.js'
 import { googleSignInEnabled, verifyGoogleCredential } from './google-auth.js'
@@ -107,12 +111,18 @@ app.use((req, res, next) => {
 // that matter most: guessing a password, and flooding a stranger's contact
 // form. Keyed by IP (via `trust proxy` above), not by account, since the
 // point is to slow down a request before anyone has signed in.
+//
+// The counters live in PostgreSQL (`rate_limits`), so a restart does not give
+// everyone a fresh allowance. If the database is unreachable the limiters let
+// requests through (`passOnStoreError`) instead of locking everyone out.
+const limiterStore = (name) => ({ store: new PgRateLimitStore(name), passOnStoreError: true })
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     limit: Number(process.env.RATE_LIMIT_GENERAL) || 600,
     standardHeaders: true,
     legacyHeaders: false,
+    ...limiterStore('general'),
   }),
 )
 const authLimiter = rateLimit({
@@ -123,6 +133,7 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many attempts. Please wait a few minutes and try again.' },
+  ...limiterStore('auth'),
 })
 const leadsLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -130,6 +141,7 @@ const leadsLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many messages sent from this address. Please try again later.' },
+  ...limiterStore('leads'),
 })
 
 function asyncRoute(handler) {
@@ -697,7 +709,13 @@ app.delete(
 
 // ── AI ─────────────────────────────────────────────────────────────────────
 
-registerAiRoutes(app, { requireUser, asyncRoute })
+registerAiRoutes(app, { requireUser, asyncRoute, limiterStore: limiterStore('ai') })
+
+// ── Content, templates and per-user data ───────────────────────────────────
+
+registerCatalogRoutes(app, { asyncRoute })
+registerLayoutTemplateRoutes(app, { asyncRoute })
+registerMeRoutes(app, { requireUser })
 
 // ── Errors ─────────────────────────────────────────────────────────────────
 

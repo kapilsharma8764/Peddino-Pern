@@ -1,74 +1,51 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  ArrowRight, Check, Download, FileText, Globe2, Heart, Inbox, LayoutGrid, LayoutTemplate, Layers3, MessageSquare, MonitorSmartphone,
-  MousePointer2, Palette, PanelsTopLeft, Rocket, Search, ShieldCheck, Sparkles, Type, Wand2,
-} from 'lucide-react'
+import { ArrowRight, Check, FileText, LayoutTemplate, MessageSquare, Search } from 'lucide-react'
 import { BRAND } from '@/brand'
 import { leadsEndpoint } from '@/lib/api'
-import { CardGrid, CtaBand, Faq, MarketingPage, PageHero, Section } from './MarketingPage'
+import { columnsOf, listOf, textOf, usePageContent } from '@/services/contentApi'
+import { usePricing } from '@/services/pricingApi'
+import { BuildLink, CardGrid, Faq, MarketingPage, PageHero, Section } from './MarketingPage'
+import { BuilderPreview } from './BuilderPreview'
+import { CardsSection, CtaSection, HeroSection } from './content'
+import { cardItems, fill, iconFor, type CardContent } from './content-helpers'
 
 const UPDATED = '2 October 2026'
 
 /* ───────────────────────── Features ───────────────────────── */
 export function Features() {
+  const { sections: c, status } = usePageContent('features')
   return (
-    <MarketingPage title="Features" description={`Everything in ${BRAND.name}: a drag-and-drop editor, 200+ widgets, layouts, templates, colours and one-click export.`}>
-      <PageHero eyebrow="FEATURES" title="Everything you need to" accent="build your website." lede={`${BRAND.name} gives you a visual editor, ready-made templates and a library of building blocks. Start from a design or from a blank page, and change anything by clicking it.`}>
+    <MarketingPage busy={status === 'loading'} title="Features" description={`Everything in ${BRAND.name}: a drag-and-drop editor, 200+ widgets, layouts, templates, colours and one-click export.`}>
+      <HeroSection section={c.hero}>
         <div className="mk-cta-actions" style={{ marginTop: 28 }}>
-          <Link className="mk-btn mk-btn-primary" to="/start">Start building <ArrowRight size={16} /></Link>
+          <BuildLink className="mk-btn mk-btn-primary">Start building <ArrowRight size={16} /></BuildLink>
           <Link className="mk-btn mk-btn-ghost" to="/how-it-works">See how it works</Link>
         </div>
-      </PageHero>
+      </HeroSection>
 
-      <Section eyebrow="BUILD" title="A real visual editor" lede="Click text, an image or a button on the page and edit it right there. Nothing to install and no code to touch.">
-        <CardGrid items={[
-          { icon: <MousePointer2 size={20} />, title: 'Click to edit', text: 'Change words, photos, links and buttons directly on the page, with undo and redo whenever you need them.' },
-          { icon: <LayoutGrid size={20} />, title: '200+ widgets', text: 'Headings, forms, galleries, pricing, FAQs, calculators and more, searchable and sorted into categories.' },
-          { icon: <PanelsTopLeft size={20} />, title: 'Layouts that start empty', text: 'Pick a column, grid, sidebar or hero layout and fill each place with your own widgets. 75+ layouts, no fake content.' },
-          { icon: <Layers3 size={20} />, title: 'Page structures', text: 'Business, education, portfolio, shop and service skeletons: labelled empty sections you complete yourself.' },
-          { icon: <Type size={20} />, title: 'Headers and footers', text: 'Choose from many header and footer styles. They are shared, so one change updates every page, and the menu follows your pages.' },
-          { icon: <MonitorSmartphone size={20} />, title: 'Desktop, tablet, mobile', text: 'Switch the preview size as you work. Columns stack on phones and become two columns on tablets.' },
-        ]} />
-      </Section>
+      <section className="studio-container mk-preview-section"><BuilderPreview />{c.proof && <div className="mk-proof-strip">{listOf<{ icon?: string; text?: string }>(c.proof.content.items).map((item) => <span key={item.text}>{iconFor(item.icon, 16)} {item.text}</span>)}</div>}</section>
 
-      <Section eyebrow="DESIGN" title="Make it look like you" tone="soft">
-        <CardGrid columns={3} items={[
-          { icon: <LayoutTemplate size={20} />, title: 'Ready-made templates', text: 'Browse templates by kind of business, preview them on three screen sizes, and open one in the editor with your details filled in.' },
-          { icon: <Palette size={20} />, title: 'Colours at three levels', text: 'Change colours for the whole site, for one page, or for a single section. Header and footer colours too.' },
-          { icon: <Wand2 size={20} />, title: 'Starting designs', text: 'Choose a look first, then pick your pages. You get a working starter site to change, not an empty screen.' },
-        ]} />
-      </Section>
-
-      <Section eyebrow="PUBLISH" title="Take it live, or take it with you">
-        <CardGrid columns={3} items={[
-          { icon: <Rocket size={20} />, title: 'Publish', text: 'Publish your site to its own address and update it any time by editing and publishing again.' },
-          { icon: <Download size={20} />, title: 'Export', text: 'Download your whole site as HTML files or a ZIP and host it wherever you like. What you export matches the editor.' },
-          { icon: <Inbox size={20} />, title: 'Enquiries inbox', text: 'Contact forms on your site send messages to an Enquiries page in your workspace.' },
-        ]} />
-      </Section>
-
-      <CtaBand title="See it for yourself" text="Start with a template or a blank page. It takes a few minutes to have something real on screen." secondary={{ label: 'Read the help centre', to: '/help' }} />
+      <CardsSection section={c.build} />
+      <CardsSection section={c.design} />
+      <CardsSection section={c.publish} />
+      <CtaSection section={c.cta} />
     </MarketingPage>
   )
 }
 
 /* ───────────────────────── How it works ───────────────────────── */
 export function HowItWorks() {
-  const steps: { title: string; text: string; points?: string[] }[] = [
-    { title: 'Tell us what you are building', text: 'Choose the kind of website: business, school, restaurant, portfolio and more. This decides which designs and pages we suggest first.' },
-    { title: 'Add your business details', text: 'Name, a short description, and, if you want, a tagline, contact details and a logo. We reuse them everywhere so you never type them twice.' },
-    { title: 'Pick how to start', text: 'Two ways in, and you can switch later.', points: ['Choose a template: browse designs for your kind of business, preview them, and open one.', 'Create a site: choose a starting design and your pages, then build the rest with 200+ widgets.'] },
-    { title: 'Edit visually', text: 'Click anything to change it. Add sections from the layout list, drop widgets in, and set your colours. Check desktop, tablet and mobile as you go.' },
-    { title: 'Preview and publish', text: 'Preview your pages, then publish or download the site. Your project stays in your workspace so you can come back and change it.' },
-  ]
+  const { sections: c, status } = usePageContent('how-it-works')
+  const steps = listOf<{ label?: string; title?: string; text?: string; points?: string[] }>(c.steps?.content.items)
   return (
-    <MarketingPage title="How it works" description={`How ${BRAND.name} takes you from an idea to a published website in five steps.`}>
-      <PageHero eyebrow="HOW IT WORKS" title="From idea to website in" accent="five steps." lede="No code, no waiting. Answer a few questions, choose a starting point, then edit the page the way you would edit a document." />
-      <Section>
+    <MarketingPage busy={status === 'loading'} title="How it works" description={`How ${BRAND.name} takes you from an idea to a published website in five steps.`}>
+      <HeroSection section={c.hero} />
+      {steps.length > 0 && <Section>
+        <nav className="mk-process" aria-label="Website creation steps">{steps.map((step, index) => <a key={step.title} href={`#step-${index + 1}`}><span>0{index + 1}</span><b>{step.label}</b><ArrowRight size={16} /></a>)}</nav>
         <div className="mk-steps">
           {steps.map((step, index) => (
-            <article key={step.title} className="mk-step" style={{ ['--i' as string]: Math.min(index, 6) }}>
+            <article id={`step-${index + 1}`} key={step.title} className="mk-step" style={{ ['--i' as string]: Math.min(index, 6) }}>
               <span className="mk-step-num" aria-hidden="true">{index + 1}</span>
               <div>
                 <h3>{step.title}</h3>
@@ -78,76 +55,75 @@ export function HowItWorks() {
             </article>
           ))}
         </div>
-      </Section>
-      <CtaBand title="Ready for step one?" text="It starts with a single question: what kind of website do you want?" secondary={{ label: 'Compare plans', to: '/pricing' }} />
+      </Section>}
+      <CtaSection section={c.cta} />
     </MarketingPage>
   )
 }
 
 /* ───────────────────────── Pricing ───────────────────────── */
 export function Pricing() {
-  const plans = [
-    { name: 'Free', price: '₹0', note: 'Available now', text: 'Everything you need to build and publish a website.', featured: true, cta: 'Start free', to: '/start',
-      items: ['The full visual editor', '200+ widgets and 75+ layouts', 'Templates for every kind of business', 'Desktop, tablet and mobile editing', 'Publish your site and export it as HTML or ZIP', 'Enquiries inbox'] },
-    { name: 'Pro', price: 'Coming soon', note: 'Planned', text: 'For businesses that want more. Tell us what you would like to see.', cta: 'Tell us what you need', to: '/contact',
-      items: ['Everything in Free', 'Your own domain name (planned)', 'More space for sites and images (planned)', 'Priority help (planned)'] },
-    { name: 'Business', price: 'Let’s talk', note: 'For teams and agencies', text: 'Building websites for several clients? We would like to hear how you work.', cta: 'Contact us', to: '/contact',
-      items: ['Several sites under one account (planned)', 'Working together on a site (planned)', 'Help moving your existing site (on request)'] },
-  ]
+  const { plans, status: planStatus } = usePricing()
+  const { sections: c, status } = usePageContent('pricing')
+  const comparison = c.comparison?.content
+  const columns = listOf<string>(comparison?.columns)
+  const rows = listOf<string[]>(comparison?.rows)
   return (
-    <MarketingPage title="Pricing" description={`${BRAND.name} is free to start. See what is included and what is coming next.`}>
-      <PageHero eyebrow="PRICING" title="Free to start." accent="Honest about what’s next." lede="You can build, publish and export a website today at no cost. Paid plans are still being planned, and we list only what is real." />
+    <MarketingPage busy={status === 'loading' || planStatus === 'loading'} title="Pricing" description={`${BRAND.name} is free to start. See what is included and what is coming next.`}>
+      <HeroSection section={c.hero} />
       <Section>
-        <div className="mk-plans">
-          {plans.map((plan, index) => (
-            <article key={plan.name} className={`mk-plan ${plan.featured ? 'is-featured' : ''}`} style={{ ['--i' as string]: Math.min(index, 6) }}>
-              {plan.featured && <span className="mk-badge">AVAILABLE NOW</span>}
-              <h3>{plan.name}</h3>
-              <div className="mk-price">{plan.price}</div>
-              <small style={{ color: 'var(--mk-muted)', fontWeight: 600 }}>{plan.note}</small>
-              <p style={{ marginTop: 12 }}>{plan.text}</p>
-              <ul>{plan.items.map((item) => <li key={item}><Check size={16} />{item}</li>)}</ul>
-              <Link className={`mk-btn ${plan.featured ? 'mk-btn-primary' : 'mk-btn-ghost'}`} to={plan.to}>{plan.cta} <ArrowRight size={15} /></Link>
-            </article>
-          ))}
-        </div>
+        {plans.length === 0 ? (
+          <div className="mk-empty"><h3>Plans are not available right now</h3><p>Please check back in a moment, or <Link to="/contact">contact us</Link>.</p></div>
+        ) : (
+          <div className="mk-plans">
+            {plans.map((plan, index) => (
+              <article key={plan.slug} className={`mk-plan ${plan.featured ? 'is-featured' : ''}`} style={{ ['--i' as string]: Math.min(index, 6) }}>
+                {plan.featured && <span className="mk-badge">AVAILABLE NOW</span>}
+                <h3>{plan.name}</h3>
+                <div className="mk-price">{plan.priceLabel}</div>
+                <small style={{ color: 'var(--mk-muted)', fontWeight: 600 }}>{plan.note}</small>
+                <p style={{ marginTop: 12 }}>{plan.description}</p>
+                <ul>{plan.features.map((item) => <li key={item}><Check size={16} />{item}</li>)}</ul>
+                <BuildLink className={`mk-btn ${plan.featured ? 'mk-btn-primary' : 'mk-btn-ghost'}`} to={plan.ctaTo}>{plan.ctaLabel} <ArrowRight size={15} /></BuildLink>
+              </article>
+            ))}
+          </div>
+        )}
       </Section>
-      <Section id="faq" eyebrow="QUESTIONS" title="About pricing">
-        <Faq items={[
-          ['Is the free plan really free?', 'Yes. You can build, publish and export websites without paying. There is no card needed to start.'],
-          ['What will paid plans include?', 'The items marked “planned” above are what we are working towards. Nothing marked planned is available yet, and we will say so plainly when it is.'],
-          ['Can I take my website with me?', 'Yes. You can download your site as HTML files or a ZIP and host it anywhere.'],
-          ['Who do I ask about teams or agencies?', 'Use the contact form and tell us how you work. We read every message.'],
-        ]} />
-      </Section>
+      {c.comparison && columns.length > 0 && <Section eyebrow={textOf(comparison?.eyebrow) || undefined} title={c.comparison.title} lede={c.comparison.subtitle} tone={comparison?.tone === 'soft' ? 'soft' : undefined}>
+        <div className="mk-comparison" tabIndex={0} role="region" aria-label="Plan comparison"><table><caption className="sr-only">Available and planned features by plan</caption><thead><tr><th scope="col">Capability</th>{columns.map((column) => <th key={column} scope="col">{column}</th>)}</tr></thead><tbody>{rows.map(([feature, ...values]) => <tr key={feature}><th scope="row">{feature}</th>{values.map((value, index) => <td key={index}><span className={value === 'Included' ? 'mk-included' : 'mk-planned'}>{value === 'Included' && <Check size={14} />}{value}</span></td>)}</tr>)}</tbody></table></div>
+      </Section>}
+      {c.faq && <Section id="faq" eyebrow={textOf(c.faq.content.eyebrow) || undefined} title={c.faq.title}>
+        <Faq items={listOf<[string, string]>(c.faq.content.items)} />
+      </Section>}
+      <CtaSection section={c.cta} />
     </MarketingPage>
   )
 }
 
 /* ───────────────────────── About ───────────────────────── */
 export function About() {
+  const { sections: c, status } = usePageContent('about')
+  const stats = listOf<{ value?: string; label?: string }>(c.mission?.content.stats)
   return (
-    <MarketingPage title="About us" description={`${BRAND.name} helps small businesses, schools and individuals get a professional website without developers.`}>
-      <PageHero eyebrow="ABOUT" title={`We’re ${BRAND.short}.`} accent="We make websites simple." lede="Most small businesses need a good website and have neither the time nor the budget for a developer. We build the tool that closes that gap." />
+    <MarketingPage busy={status === 'loading'} title="About us" description={`${BRAND.name} helps small businesses, schools and individuals get a professional website without developers.`}>
+      <HeroSection section={c.hero} />
+      {c.mission && <Section eyebrow={textOf(c.mission.content.eyebrow) || undefined} title={c.mission.title} lede={c.mission.subtitle} tone={c.mission.content.tone === 'soft' ? 'soft' : undefined}>
+        <div className="mk-stats">{stats.map((stat) => <div key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></div>)}</div>
+      </Section>}
       <Section>
         <div className="mk-split">
-          <div className="mk-prose">
-            <h2>Why we built this</h2>
-            <p>A shop owner, a school, a coaching class or a freelancer should be able to put a clear, good-looking website online in an afternoon. Too many builders ask you to learn their jargon first, or hide the useful parts behind a wall of templates you cannot change.</p>
-            <p>{BRAND.name} starts from a different idea: tell us what you do, pick a starting point, and change anything by clicking it. Layouts begin empty, templates stay fully editable, and your site is yours to take away.</p>
-          </div>
-          <div className="mk-prose">
-            <h2>What we care about</h2>
-            <CardGrid columns={2} items={[
-              { icon: <Sparkles size={20} />, title: 'Simple first', text: 'Plain words instead of technical terms, and one clear next step on every screen.' },
-              { icon: <Heart size={20} />, title: 'Made for small teams', text: 'Built around the sites small businesses, schools and individuals actually need.' },
-              { icon: <ShieldCheck size={20} />, title: 'Yours to keep', text: 'Export your whole site any time. No lock-in.' },
-              { icon: <Globe2 size={20} />, title: 'Works everywhere', text: 'Sites that look right on phones, tablets and computers.' },
-            ]} />
-          </div>
+          {c.why && <div className="mk-prose">
+            <h2>{c.why.title}</h2>
+            {listOf<string>(c.why.content.paragraphs).map((paragraph) => <p key={paragraph}>{fill(paragraph)}</p>)}
+          </div>}
+          {c.care && <div className="mk-prose">
+            <h2>{c.care.title}</h2>
+            <CardGrid columns={columnsOf(c.care.content.columns, 2)} items={cardItems(c.care)} />
+          </div>}
         </div>
       </Section>
-      <CtaBand title="Build something with us" text="Have an idea, a question or a feature you wish existed? We would like to hear it." label="Start building" secondary={{ label: 'Get in touch', to: '/contact' }} />
+      <CtaSection section={c.cta} />
     </MarketingPage>
   )
 }
@@ -202,6 +178,7 @@ export function Contact() {
             <p>Looking for quick answers? The <Link to="/help" style={{ color: 'var(--mk-brand)', fontWeight: 700 }}>help centre</Link> covers the common ones.</p>
           </div>
           <form className="mk-form" onSubmit={(event) => void submit(event)} noValidate aria-label="Contact us">
+            <div className="mk-form-heading"><span className="mk-eyebrow">LET’S TALK</span><h2>Send us a message</h2><p>Share a little detail so we can help you get moving.</p></div>
             <label>Your name<input name="name" autoComplete="name" aria-invalid={Boolean(errors.name)} />{errors.name && <span className="mk-error" role="alert">{errors.name}</span>}</label>
             <label>Email<input name="email" type="email" autoComplete="email" aria-invalid={Boolean(errors.email)} />{errors.email && <span className="mk-error" role="alert">{errors.email}</span>}</label>
             <label>What is it about?<select name="topic" defaultValue="Question"><option>Question</option><option>Feedback or idea</option><option>Help with my site</option><option>Plans and pricing</option><option>Something else</option></select></label>
@@ -218,32 +195,29 @@ export function Contact() {
 
 /* ───────────────────────── Help ───────────────────────── */
 export function Help() {
+  const [query, setQuery] = useState('')
+  const [category, setCategory] = useState('All topics')
+  const { sections: c, status } = usePageContent('help')
+  const questions = listOf<{ topic: string; question: string; answer: string }>(c.faq?.content.items)
+  const topics = ['All topics', ...listOf<string>(c.faq?.content.topics)]
+  const visible = questions.filter(({ topic, question, answer }) => (category === 'All topics' || topic === category) && `${question} ${answer}`.toLowerCase().includes(query.trim().toLowerCase()))
+  const more = listOf<CardContent>(c.more?.content.items)
   return (
-    <MarketingPage title="Help centre" description={`Answers to common questions about building, editing and publishing with ${BRAND.name}.`}>
-      <PageHero eyebrow="HELP CENTRE" title="Quick answers," accent="in plain words." lede="How to start, how to edit, and how to publish. Can’t find what you need? Write to us.">
-        <div className="mk-cta-actions" style={{ marginTop: 24 }}><Link className="mk-btn mk-btn-ghost" to="/contact"><Search size={16} /> Ask us something else</Link></div>
-      </PageHero>
-      <Section eyebrow="GETTING STARTED">
-        <CardGrid columns={3} items={[
-          { icon: <Rocket size={20} />, title: 'Create your account', text: 'Sign up with your email or Google. Your sites are saved to your workspace.' },
-          { icon: <LayoutTemplate size={20} />, title: 'Choose how to start', text: 'From the start page pick “Choose a template” or “Create a site”.' },
-          { icon: <MousePointer2 size={20} />, title: 'Edit by clicking', text: 'Click text, images or buttons on the page. The panel on the right shows what you can change.' },
-        ]} />
-      </Section>
-      <Section id="faq" eyebrow="QUESTIONS" title="Frequently asked">
-        <Faq items={[
-          ['Do I need to know how to code?', 'No. You edit by clicking, and everything is built from ready blocks you can move and style.'],
-          ['What is the difference between a template and a layout?', 'A template is a finished, designed website. A layout is an empty skeleton, such as two columns or a sidebar, that you fill with widgets of your own.'],
-          ['How do I add a page?', 'Open the Pages tab in the editor and press +. Name the page, and it appears in your header menu automatically.'],
-          ['How do I change my colours?', 'Use Theme colours for the whole site, Page colours for one page, and Style for a single section.'],
-          ['Will my site work on phones?', 'Yes. Use the Desktop, Tablet and Mobile buttons at the top of the editor to check each size as you work.'],
-          ['How do I publish?', 'Use the publish or download buttons in the editor. You can also export the site as HTML files or a ZIP to host yourself.'],
-          ['Where do contact-form messages go?', 'To the Enquiries page in your workspace.'],
-          ['Can I undo a mistake?', 'Yes. Use Undo and Redo at the top, or the keyboard shortcuts. Replacing a page’s layout always asks first, and you can undo it.'],
-          ['Who owns my website?', 'You do. You can download all of it whenever you like.'],
-        ]} />
-      </Section>
-      <CtaBand title="Still stuck?" text="Send us a message and tell us what you were trying to do." label="Contact us" to="/contact" />
+    <MarketingPage busy={status === 'loading'} title="Help centre" description={`Answers to common questions about building, editing and publishing with ${BRAND.name}.`}>
+      <HeroSection section={c.hero}>
+        <label className="mk-help-search"><Search size={20} /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search pages, colours, publishing…" aria-label="Search help" /></label>
+        <p className="mk-search-hint">Try “add a page”, “colours” or “publish”.</p>
+      </HeroSection>
+      <CardsSection section={c.start} />
+      {c.faq && <Section id="faq" eyebrow={textOf(c.faq.content.eyebrow) || undefined} title={c.faq.title}>
+        <div className="mk-topic-filters" role="group" aria-label="Help topics">{topics.map((topic) => <button key={topic} type="button" aria-pressed={category === topic} onClick={() => setCategory(topic)}>{topic}</button>)}</div>
+        <p className="mk-result-count" role="status">{visible.length} {visible.length === 1 ? 'answer' : 'answers'}{query.trim() && ` for “${query.trim()}”`}</p>
+        {visible.length ? <Faq items={visible.map(({ question, answer }) => [question, answer])} /> : <div className="mk-empty"><Search size={28} /><h3>No answers found</h3><p>Try another word or browse all topics.</p><button className="mk-btn mk-btn-ghost" onClick={() => { setQuery(''); setCategory('All topics') }}>Clear search</button></div>}
+      </Section>}
+      {c.more && more.length > 0 && <Section eyebrow={textOf(c.more.content.eyebrow) || undefined} title={c.more.title} tone={c.more.content.tone === 'soft' ? 'soft' : undefined}>
+        <div className="mk-grid mk-cols-2">{more.map((item) => <article key={item.title} className="mk-card"><span className="mk-icon">{iconFor(item.icon)}</span><h3>{item.title}</h3><p>{item.text}</p>{item.linkTo && <Link className="mk-card-link" to={item.linkTo}>{item.linkLabel} <ArrowRight size={15} /></Link>}</article>)}</div>
+      </Section>}
+      <CtaSection section={c.cta} />
     </MarketingPage>
   )
 }

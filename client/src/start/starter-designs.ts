@@ -7,6 +7,7 @@ import { ensurePages, splitHeaderFooter, syncMenu } from '@/store/site-shape'
 import { customSite } from '@/layouts/custom-site'
 import { themePresets } from '@/lib/theme-presets'
 import { starterPageBlocks, type PageRole } from '@/templates/starter'
+import seed from '@/data/seed/starter_designs.json'
 
 /**
  * "Create a site" starts from a design, not from a blank page.
@@ -35,20 +36,22 @@ export interface StarterDesign {
   blank?: boolean
 }
 
-export const starterDesigns: StarterDesign[] = [
-  { id: 'modern-business', name: 'Modern Business', description: 'Logo, menu and button. Split hero, service cards, numbers, testimonials.', preset: 'blue-corporate', header: 'default', footer: 'columns', footerColumns: 3, hero: 'split', sections: [{ type: 'features', variant: 'grid' }, { type: 'content', variant: 'side-by-side' }, { type: 'stats' }, { type: 'testimonials' }, { type: 'cta' }] },
-  { id: 'clean-minimal', name: 'Clean Minimal', description: 'Centred header, plain hero and lots of space.', preset: 'grey-minimal', header: 'centered', footer: 'minimal', hero: 'minimal', sections: [{ type: 'features', variant: 'list' }, { type: 'content', variant: 'prose' }, { type: 'cta' }] },
-  { id: 'professional-corporate', name: 'Professional Corporate', description: 'Header with a contact bar, formal sections and a clear footer.', preset: 'blue-corporate', header: 'topbar', footer: 'newsletter', footerColumns: 3, hero: 'split', sections: [{ type: 'logocloud' }, { type: 'features', variant: 'grid' }, { type: 'stats' }, { type: 'team' }, { type: 'faq' }, { type: 'cta' }] },
-  { id: 'creative-portfolio', name: 'Creative Portfolio', description: 'Big picture hero, a gallery of work and a short contact.', preset: 'orange-creative', header: 'stacked', footer: 'inline', hero: 'photo', sections: [{ type: 'gallery', variant: 'masonry' }, { type: 'content', variant: 'side-by-side' }, { type: 'testimonials' }, { type: 'contact' }] },
-  { id: 'dark-modern', name: 'Dark Modern', description: 'Dark colours, gradient hero and bold sections.', preset: 'dark-grey', header: 'split-center', footer: 'columns', footerColumns: 2, hero: 'gradient', sections: [{ type: 'features', variant: 'grid' }, { type: 'stats' }, { type: 'testimonials' }, { type: 'cta' }] },
-  { id: 'light-elegant', name: 'Light Elegant', description: 'Soft colours, centred header and refined sections.', preset: 'ivory', header: 'stacked-pipes', footer: 'centered', hero: 'centered', sections: [{ type: 'content', variant: 'side-by-side' }, { type: 'gallery', variant: 'grid' }, { type: 'testimonials' }, { type: 'cta' }] },
-  { id: 'bold-agency', name: 'Bold Agency', description: 'Strong colours, picture hero and a services grid.', preset: 'black-premium', header: 'contact', footer: 'columns', footerColumns: 4, hero: 'photo', sections: [{ type: 'features', variant: 'grid' }, { type: 'logocloud' }, { type: 'team' }, { type: 'cta' }] },
-  { id: 'startup-saas', name: 'Startup / SaaS', description: 'Gradient hero, feature grid, pricing and questions.', preset: 'ocean', header: 'split-center', footer: 'newsletter', footerColumns: 3, hero: 'gradient', sections: [{ type: 'logocloud' }, { type: 'features', variant: 'grid' }, { type: 'pricing' }, { type: 'faq' }, { type: 'cta' }] },
-  { id: 'education', name: 'Education', description: 'Friendly colours, courses, teachers, numbers and questions.', preset: 'green-education', header: 'default', footer: 'columns', footerColumns: 3, hero: 'split', sections: [{ type: 'features', variant: 'grid' }, { type: 'team' }, { type: 'stats' }, { type: 'faq' }, { type: 'cta' }] },
-  { id: 'ecommerce', name: 'E-commerce', description: 'Icons in the header, a shop front with products and a newsletter.', preset: 'rose', header: 'icons', footer: 'newsletter', footerColumns: 3, hero: 'photo', sections: [{ type: 'features', variant: 'grid' }, { type: 'products' }, { type: 'testimonials' }, { type: 'newsletter' }] },
-  { id: 'restaurant', name: 'Restaurant', description: 'Warm colours, picture hero, opening hours and gallery.', preset: 'amber', header: 'centered', footer: 'columns', footerColumns: 3, hero: 'photo', sections: [{ type: 'content', variant: 'side-by-side' }, { type: 'gallery', variant: 'grid' }, { type: 'hours' }, { type: 'testimonials' }, { type: 'contact' }] },
-  { id: 'blank', name: 'Blank canvas', description: 'A header, a footer and an empty page. You choose every layout.', preset: 'default', header: 'default', footer: 'columns', hero: 'minimal', sections: [], blank: true },
-]
+/** A starting design as the API and the seed file spell it: its look sits in `config`. */
+export interface StarterDesignRow {
+  slug: string
+  name: string
+  description: string
+  config: Omit<StarterDesign, 'id' | 'name' | 'description'>
+}
+
+export const toStarterDesign = (row: StarterDesignRow): StarterDesign => ({ ...row.config, id: row.slug, name: row.name, description: row.description })
+
+/**
+ * The offline fallback: the seed file, which is also what fills the database.
+ * Components read the list through `useCatalog`, which swaps in the API's copy
+ * once it has loaded.
+ */
+export const starterDesigns: StarterDesign[] = (seed as unknown as StarterDesignRow[]).map(toStarterDesign)
 
 export const starterDesignMap = new Map(starterDesigns.map((design) => [design.id, design]))
 

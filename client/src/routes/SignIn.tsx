@@ -6,6 +6,7 @@ import { api, ApiError } from '@/lib/api'
 import { useAuthStore, type Account } from '@/store/authStore'
 import { EditorScene } from '@/components/studio/Motion'
 import { GoogleSignInButton } from './GoogleSignInButton'
+import { MarketingFooter } from '@/marketing/MarketingPage'
 import './SignIn.css'
 
 export function SignIn() {
@@ -80,6 +81,7 @@ export function SignIn() {
     } finally { setBusy(false) }
   }
   return <div className="studio-auth h-full">
+    <div className="auth-content">
     <div className="auth-grid">
       <section className="auth-story"><span className="studio-badge"><Sparkles size={13} /> YOUR OWN CREATIVE SPACE</span><h1>Big ideas.<br /><em>Beautiful beginnings.</em></h1><p>Your business deserves a website that feels like you.<br />Let’s make it happen.</p><EditorScene /><div className="auth-benefits"><span><Check size={14} /> Visual editing</span><span><Check size={14} /> Thoughtful templates</span><span><Check size={14} /> Room to grow</span></div></section>
       <section className="auth-panel"><Link to="/" className="auth-back"><ArrowLeft size={14} /> Back to the studio</Link><div className="auth-mark"><Layers3 size={25} /></div><span className="studio-eyebrow">{recovering ? 'LOCKED OUT? NO PROBLEM' : creating ? 'MAKE YOURSELF AT HOME' : 'YOUR NEXT CHAPTER AWAITS'}</span><h2>{recovering ? 'Reset your password.' : creating ? 'Create your account.' : 'Welcome back.'}</h2><p>{mode === 'forgot' ? 'Enter your account email and we will issue a six-digit reset code.' : mode === 'reset' ? 'Enter the code and choose a new password.' : creating ? 'A space for your ideas, websites and everything next.' : 'Your ideas are right where you left them.'}</p>
@@ -106,6 +108,8 @@ export function SignIn() {
         <div className="auth-footnote"><LockKeyhole size={13} /> Your websites. Your workspace. Your next big thing.</div>
       </section>
     </div>
+    </div>
+    <div className="mk auth-footer"><MarketingFooter /></div>
     {success && <div className="auth-success-backdrop" role="presentation"><section className="auth-success-dialog" role="status" aria-live="assertive" aria-label={success.title}><span className="auth-success-icon"><CheckCircle2 size={31} /></span><span className="studio-eyebrow">YOU'RE ALL SET</span><h2>{success.title}</h2><p>{success.message}</p><span className="auth-success-loading"><i /><i /><i /> Opening your site…</span></section></div>}
   </div>
 }

@@ -10,9 +10,11 @@
     "start": "node src/index.js",
     "test": "node --test src/**/*.test.js",
     "test:unit": "node --test --test-skip-pattern=integration src/**/*.test.js",
-    "test:integration": "node --test src/auth.integration.test.js",
+    "test:integration": "node --test src/auth.integration.test.js src/dynamic.integration.test.js",
     "import:templates": "node scripts/import-templates.mjs",
-    "verify:live-templates": "node scripts/verify-live-templates.mjs"
+    "verify:live-templates": "node scripts/verify-live-templates.mjs",
+    "seed:content": "node scripts/seed-content.mjs",
+    "import:layout-templates": "node scripts/import-layout-templates.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

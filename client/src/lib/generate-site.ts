@@ -1,7 +1,9 @@
 import type { SiteConfig, BlockConfig, ThemeConfig } from '@/blocks/types'
 import { blockMetadata } from '@/lib/block-metadata'
 import { GENERATION_PROMPT } from '@/lib/generation-prompt'
-import { buildTemplate, defaultTemplateFor } from '@/templates/library'
+import { buildTemplate } from '@/templates/library/types'
+import { emergencyTemplate } from '@/templates/library/emergency'
+import { loadStartingTemplate } from '@/services/templateApi'
 import { newId } from './id'
 import { api } from './api'
 import { authToken } from '@/store/authStore'
@@ -40,7 +42,7 @@ export async function generateSiteConfig(prompt: string, signal?: AbortSignal): 
   }
 
   // 3. Smart fallback template (instant, no fake progress)
-  return { config: buildTemplate(defaultTemplateFor(null)), source: 'template' }
+  return { config: buildTemplate(await loadStartingTemplate(null)), source: 'template' }
 }
 
 async function callGeminiDirect(prompt: string, apiKey: string, signal?: AbortSignal): Promise<SiteConfig> {
@@ -135,7 +137,7 @@ function validatePageBlocks(rawBlocks: unknown[]): BlockConfig[] {
 
 export function validateSiteConfig(raw: unknown, prompt?: string): SiteConfig {
   if (!raw || typeof raw !== 'object') {
-    return buildTemplate(defaultTemplateFor(null))
+    return buildTemplate(emergencyTemplate)
   }
 
   const obj = raw as Record<string, unknown>
@@ -173,7 +175,7 @@ export function validateSiteConfig(raw: unknown, prompt?: string): SiteConfig {
   }
 
   if (!pages && blocks.length === 0) {
-    return buildTemplate(defaultTemplateFor(null))
+    return buildTemplate(emergencyTemplate)
   }
 
   // If no pages but have blocks, wrap into single Home page

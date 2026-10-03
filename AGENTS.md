@@ -44,6 +44,10 @@ Without that `VITE_API_URL` the page talks to the dev API (:8001) while the test
 - **Colours** are CSS variables: `--color-*` (the editor) and `--brand-*` (sites). A custom site starts blank on the neutral theme.
 - **Motion** on public pages: animate only `transform` and `opacity`, entrances once (`Reveal`), hover effects only under `(hover: hover)`, and honour `prefers-reduced-motion`.
 
+- **Content comes from PostgreSQL.** Website types, starter designs, business presets, pricing, marketing copy and the layout templates are tables (`server/migrations/`), served by `server/src/routes/` and read in the client through `client/src/services/` and `store/catalogStore.ts`. The seed files in `client/src/data/seed/*.json` fill the database (`npm --prefix server run seed:content`) and are also the offline fallback; the layout templates in `client/src/templates/library/imported/*.ts` are only the source for `npm --prefix server run import:layout-templates` and for tests, and must not be imported by app code (use `templates/library/types` and `services/templateApi`).
+- **A signed-in user's brief, setup progress and business answers** sync to `/api/me/*` (`client/src/lib/user-sync.ts`); localStorage is the guest copy and a cache. A personal Gemini key stays in the browser and is never sent to the API.
+- **Rate limits** use the `rate_limits` table (`server/src/rate-limit-store.js`).
+
 ## Known gaps
 
 - Address replacement fills about a third of the templates; the name cannot change where it is only inside a logo image.

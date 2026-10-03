@@ -58,7 +58,7 @@ export async function askGemini({ system, messages, temperature }, { key, fetchI
  * Adds `/api/ai/status` and `/api/ai/complete`.
  * `requireUser` and `asyncRoute` are the API's own helpers, passed in so this file stays easy to test.
  */
-export function registerAiRoutes(app, { requireUser, asyncRoute, getKey = () => process.env.GEMINI_API_KEY, ask = askGemini }) {
+export function registerAiRoutes(app, { requireUser, asyncRoute, getKey = () => process.env.GEMINI_API_KEY, ask = askGemini, limiterStore = {} }) {
   // Per account, not per address: the cost belongs to whoever is asking.
   const limiter = rateLimit({
     windowMs: 10 * 60 * 1000,
@@ -68,6 +68,8 @@ export function registerAiRoutes(app, { requireUser, asyncRoute, getKey = () => 
     keyGenerator: (req) => req.user?.id ?? req.ip,
     validate: { keyGeneratorIpFallback: false },
     message: { error: 'You have used a lot of AI requests. Please wait a few minutes and try again.' },
+    // A shared store (PostgreSQL) when given, so the count survives a restart.
+    ...limiterStore,
   })
 
   app.get('/api/ai/status', (_req, res) => {

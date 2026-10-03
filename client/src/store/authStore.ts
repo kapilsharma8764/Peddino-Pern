@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useBusinessStore } from './businessStore'
+import { clearLocalUserData } from '@/lib/local-user-data'
 
 export interface Account {
   id: string
@@ -32,6 +33,7 @@ export const useAuthStore = create<AuthState>()(
       // soon as their session ends so it is never offered to the next visitor.
       signOut: () => {
         useBusinessStore.getState().reset()
+        clearLocalUserData()
         set({ token: null, user: null })
       },
     }),

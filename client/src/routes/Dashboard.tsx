@@ -19,6 +19,7 @@ import { usePublishStore } from '@/store/publishStore'
 import type { SiteConfig } from '@/blocks/types'
 import type { BusinessProfile } from '@/onboarding/profile'
 import { useScrollReveal } from '@/lib/useScrollReveal'
+import { WorkspaceMetrics } from '@/components/WorkspaceMetrics'
 
 /**
  * Every site this installation has saved.
@@ -59,7 +60,7 @@ function SiteCard({
   return (
     <div ref={ref} className={isRevealed ? 'scroll-revealed' : ''}>
       <div
-        className={`reveal-fade-up ${stagger} rounded-xl border border-border-default bg-bg-1 flex flex-col hover:border-border-hover hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all overflow-hidden`}
+        className={`workspace-site-card reveal-fade-up ${stagger} rounded-xl border border-border-default bg-bg-1 flex flex-col transition-all overflow-hidden`}
       >
         <div className="relative h-36 border-b border-border-default">
           <SitePreview
@@ -183,20 +184,21 @@ export function Dashboard() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="shrink-0 px-6 pt-7 pb-4 border-b border-border-default">
+      <div className="workspace-page-header shrink-0 px-6 pt-7 pb-4 border-b border-border-default">
         <div className="max-w-5xl mx-auto flex flex-wrap items-end justify-between gap-4">
           <div className="hero-in" style={{ '--hero-delay': '0ms' } as React.CSSProperties}>
+            <span className="workspace-eyebrow">YOUR CREATIVE WORKSPACE</span>
             <h1 className="text-xl font-bold tracking-tight text-text-0 font-display">Your sites</h1>
             <p className="mt-1 text-[12.5px] text-text-2">
               {sites === null
                 ? 'Loading…'
                 : sites.length === 0
-                  ? 'Nothing saved yet.'
+                  ? 'A new home for your ideas. Create your first website to get started.'
                   : `${sites.length} site${sites.length === 1 ? '' : 's'}`}
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="workspace-actions flex items-center gap-2">
             <button
               type="button"
               onClick={() => void refresh()}
@@ -209,7 +211,7 @@ export function Dashboard() {
             <button
               type="button"
               onClick={() => navigate('/create')}
-              className="h-8 px-3 rounded-lg bg-text-0 text-bg-0 text-[12.5px] font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5"
+              className="workspace-primary h-8 px-3 rounded-lg bg-text-0 text-bg-0 text-[12.5px] font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5"
             >
               <Plus size={13} />
               New website
@@ -220,6 +222,7 @@ export function Dashboard() {
 
       <div className="flex-1 overflow-y-auto px-6 py-6">
         <div className="max-w-5xl mx-auto">
+          {sites !== null && !error && <WorkspaceMetrics items={[{ label: 'Total websites', value: sites.length }, { label: 'Published', value: sites.filter((site) => site.published).length }, { label: 'Drafts', value: sites.filter((site) => !site.published).length }]} />}
           {/* Sites saved before accounts existed. Offered rather than taken:
               attaching someone's work to the first account to sign up is the
               kind of guess that is wrong exactly when it matters. */}
@@ -251,17 +254,17 @@ export function Dashboard() {
             <div className="py-20 text-center">
               <p className="text-[13px] text-status-red">{error}</p>
               <p className="mt-2 text-[12px] text-text-3">
-                Start it with <code className="font-mono">npm run dev</code> in the server folder.
+                We could not load your websites. Please try Refresh in a moment.
               </p>
             </div>
           ) : sites.length === 0 ? (
-            <div className="py-20 text-center">
+            <div className="workspace-empty py-20 text-center">
               <Globe size={20} className="mx-auto text-text-3" />
-              <p className="mt-3 text-[13px] text-text-1">No sites yet</p>
+              <h2>No sites yet</h2><p>Start with a template or a blank canvas. Your saved websites will appear here, ready to edit and publish.</p>
               <button
                 type="button"
                 onClick={() => navigate('/create')}
-                className="mt-4 h-9 px-4 rounded-xl bg-text-0 text-bg-0 text-[12.5px] font-semibold hover:opacity-90 transition-opacity"
+                className="workspace-primary mt-4 h-9 px-4 rounded-xl bg-text-0 text-bg-0 text-[12.5px] font-semibold hover:opacity-90 transition-opacity"
               >
                 Create your first website
               </button>

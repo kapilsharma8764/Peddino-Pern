@@ -36,7 +36,7 @@ test('every public page opens with the brand, a heading, the menu and the footer
 
 test('the menu and footer reach every page, and the home page still works', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: /Turn your idea into a/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Your vision/ })).toBeVisible()
   const nav = page.getByRole('navigation', { name: 'Main navigation' })
   for (const [label, path] of [['Features', '/features'], ['How it works', '/how-it-works'], ['Pricing', '/pricing'], ['About', '/about'], ['Help', '/help']] as const) {
     await nav.getByRole('link', { name: label, exact: true }).click()

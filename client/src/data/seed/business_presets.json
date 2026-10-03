@@ -1,0 +1,647 @@
+[
+  {
+    "slug": "cafe",
+    "name": "Cafe",
+    "description": "Cafe website",
+    "businessType": "Cafe",
+    "examplePrompt": "A modern neighbourhood café serving artisan coffee, fresh pastries and takeaway drinks.",
+    "websiteTypeSlug": "cafe",
+    "keywords": [
+      "cafe",
+      "coffee",
+      "bakery",
+      "espresso",
+      "barista",
+      "pastries"
+    ],
+    "recommendedPages": [
+      "Home",
+      "About",
+      "Menu",
+      "Gallery",
+      "Contact"
+    ],
+    "recommendedFeatures": [
+      "Menu",
+      "Gallery",
+      "Contact Form",
+      "Location",
+      "Opening Hours"
+    ],
+    "recommendedSections": [
+      "Hero",
+      "Popular Items",
+      "About",
+      "Gallery",
+      "Testimonials",
+      "Location",
+      "CTA"
+    ],
+    "suggestedTemplateCategory": "Food & Dining",
+    "themeDirection": {
+      "style": "Warm Minimal",
+      "primaryColor": "#8c5a2b",
+      "accentColor": "#e9b872"
+    },
+    "preview": {
+      "title": "Modern Neighbourhood Cafe",
+      "brand": "MODERN CAFE",
+      "tagline": "Artisan coffee & fresh pastries",
+      "kind": "Cafe",
+      "headline": "Coffee made with care,\nserved with a smile.",
+      "blurb": "Fresh pastries, small-batch coffee and a seat by the window.",
+      "cta": "See the menu",
+      "nav": [
+        "Home",
+        "Menu",
+        "Gallery"
+      ],
+      "navButton": "Visit us",
+      "stats": [
+        [
+          "24",
+          "Menu items"
+        ],
+        [
+          "4.9",
+          "Rating"
+        ],
+        [
+          "7am",
+          "Opens"
+        ]
+      ],
+      "widgets": [
+        "Menu",
+        "Gallery",
+        "Location",
+        "Text",
+        "Button",
+        "Section"
+      ],
+      "selected": "Hero headline selected",
+      "ai": "Added a menu, gallery and opening hours from your brief.",
+      "ready": 92,
+      "tint": [
+        "#fbf7f1",
+        "#f4ede2"
+      ],
+      "ink": "#241c14"
+    },
+    "isChip": true,
+    "sortOrder": 10
+  },
+  {
+    "slug": "school",
+    "name": "School",
+    "description": "School website",
+    "businessType": "School",
+    "examplePrompt": "A modern school website for admissions, courses, teachers, facilities, events and parent enquiries.",
+    "websiteTypeSlug": "school",
+    "keywords": [
+      "school",
+      "education",
+      "academy",
+      "college",
+      "tuition",
+      "coaching",
+      "admission",
+      "students",
+      "teacher",
+      "teachers"
+    ],
+    "recommendedPages": [
+      "Home",
+      "About",
+      "Courses",
+      "Admission",
+      "Gallery",
+      "Contact"
+    ],
+    "recommendedFeatures": [
+      "Admission Form",
+      "Course List",
+      "Teacher Profiles",
+      "Event Gallery",
+      "Contact Form"
+    ],
+    "recommendedSections": [
+      "Hero",
+      "About",
+      "Courses",
+      "Teachers",
+      "Facilities",
+      "Events",
+      "Admission CTA"
+    ],
+    "suggestedTemplateCategory": "Education",
+    "themeDirection": {
+      "style": "Friendly Academic",
+      "primaryColor": "#1d4ed8",
+      "accentColor": "#f59e0b"
+    },
+    "preview": {
+      "title": "Bright Future Academy",
+      "brand": "BRIGHT FUTURE",
+      "tagline": "Learning today, leading tomorrow",
+      "kind": "School",
+      "headline": "A place where\nevery child grows.",
+      "blurb": "Admissions open. Meet our teachers and see our campus.",
+      "cta": "Apply for admission",
+      "nav": [
+        "Home",
+        "Courses",
+        "Admission"
+      ],
+      "navButton": "Enquire",
+      "stats": [
+        [
+          "1,200",
+          "Students"
+        ],
+        [
+          "60+",
+          "Teachers"
+        ],
+        [
+          "25",
+          "Years"
+        ]
+      ],
+      "widgets": [
+        "Courses",
+        "Admissions",
+        "Teachers",
+        "Text",
+        "Button",
+        "Section"
+      ],
+      "selected": "Admissions banner selected",
+      "ai": "Added courses, admissions and a parent enquiry form from your brief.",
+      "ready": 90,
+      "tint": [
+        "#f3f8ff",
+        "#e6f0fb"
+      ],
+      "ink": "#14284b"
+    },
+    "isChip": true,
+    "sortOrder": 20
+  },
+  {
+    "slug": "portfolio",
+    "name": "Portfolio",
+    "description": "Portfolio website",
+    "businessType": "Portfolio",
+    "examplePrompt": "A professional personal portfolio for a full-stack developer showcasing projects, skills, services and contact information.",
+    "websiteTypeSlug": "portfolio",
+    "keywords": [
+      "portfolio",
+      "developer",
+      "freelancer",
+      "freelance",
+      "designer",
+      "resume",
+      "personal website"
+    ],
+    "recommendedPages": [
+      "Home",
+      "About",
+      "Portfolio",
+      "Services",
+      "Contact"
+    ],
+    "recommendedFeatures": [
+      "Project Gallery",
+      "Skills List",
+      "Contact Form",
+      "Resume Download",
+      "Social Links"
+    ],
+    "recommendedSections": [
+      "Hero",
+      "Projects",
+      "Skills",
+      "Services",
+      "Testimonials",
+      "Contact CTA"
+    ],
+    "suggestedTemplateCategory": "Portfolio & Personal",
+    "themeDirection": {
+      "style": "Clean Creative",
+      "primaryColor": "#6d28d9",
+      "accentColor": "#22d3ee"
+    },
+    "preview": {
+      "title": "Creative Developer",
+      "brand": "CREATIVE DEV",
+      "tagline": "Full-stack projects and services",
+      "kind": "Portfolio",
+      "headline": "I build things\nfor the web.",
+      "blurb": "Selected projects, the skills behind them and how to hire me.",
+      "cta": "View projects",
+      "nav": [
+        "Home",
+        "Projects",
+        "Skills"
+      ],
+      "navButton": "Hire me",
+      "stats": [
+        [
+          "30+",
+          "Projects"
+        ],
+        [
+          "8",
+          "Years"
+        ],
+        [
+          "5.0",
+          "Reviews"
+        ]
+      ],
+      "widgets": [
+        "Projects",
+        "Skills",
+        "Contact",
+        "Text",
+        "Button",
+        "Section"
+      ],
+      "selected": "Project grid selected",
+      "ai": "Added projects, skills and a contact section from your brief.",
+      "ready": 94,
+      "tint": [
+        "#f6f4ff",
+        "#ebe6fb"
+      ],
+      "ink": "#1b1640"
+    },
+    "isChip": true,
+    "sortOrder": 30
+  },
+  {
+    "slug": "restaurant",
+    "name": "Restaurant",
+    "description": "Restaurant website",
+    "businessType": "Restaurant",
+    "examplePrompt": "A modern restaurant website with menu, table booking, location, gallery and online ordering information.",
+    "websiteTypeSlug": "restaurant",
+    "keywords": [
+      "restaurant",
+      "dining",
+      "bistro",
+      "food",
+      "menu",
+      "chef",
+      "catering",
+      "dhaba",
+      "table booking"
+    ],
+    "recommendedPages": [
+      "Home",
+      "About",
+      "Menu",
+      "Gallery",
+      "Contact"
+    ],
+    "recommendedFeatures": [
+      "Menu",
+      "Table Booking",
+      "Gallery",
+      "Google Maps",
+      "Opening Hours"
+    ],
+    "recommendedSections": [
+      "Hero",
+      "Signature Dishes",
+      "Menu",
+      "Gallery",
+      "Reservation",
+      "Location",
+      "CTA"
+    ],
+    "suggestedTemplateCategory": "Food & Dining",
+    "themeDirection": {
+      "style": "Warm Elegant",
+      "primaryColor": "#9a3412",
+      "accentColor": "#fbbf24"
+    },
+    "preview": {
+      "title": "Olive & Ember",
+      "brand": "OLIVE & EMBER",
+      "tagline": "Wood-fired kitchen & wine bar",
+      "kind": "Restaurant",
+      "headline": "Cooked over fire,\nshared at the table.",
+      "blurb": "Seasonal dishes, a short wine list and tables you can book online.",
+      "cta": "Book a table",
+      "nav": [
+        "Home",
+        "Menu",
+        "Reserve"
+      ],
+      "navButton": "Book now",
+      "stats": [
+        [
+          "38",
+          "Dishes"
+        ],
+        [
+          "4.8",
+          "Rating"
+        ],
+        [
+          "6pm",
+          "Opens"
+        ]
+      ],
+      "widgets": [
+        "Menu",
+        "Reservation",
+        "Gallery",
+        "Text",
+        "Button",
+        "Section"
+      ],
+      "selected": "Reservation button selected",
+      "ai": "Added a menu, table booking and gallery from your brief.",
+      "ready": 91,
+      "tint": [
+        "#fdf5f0",
+        "#f6e6dc"
+      ],
+      "ink": "#3a1a10"
+    },
+    "isChip": true,
+    "sortOrder": 40
+  },
+  {
+    "slug": "ecommerce",
+    "name": "Ecommerce",
+    "description": "Ecommerce website",
+    "businessType": "Ecommerce",
+    "examplePrompt": "An ecommerce store selling products online with categories, product pages, cart, checkout and customer support.",
+    "websiteTypeSlug": "ecommerce",
+    "keywords": [
+      "ecommerce",
+      "e-commerce",
+      "online shop",
+      "online store",
+      "store",
+      "shop",
+      "products",
+      "checkout",
+      "cart"
+    ],
+    "recommendedPages": [
+      "Home",
+      "Shop",
+      "About",
+      "FAQ",
+      "Contact"
+    ],
+    "recommendedFeatures": [
+      "Product Grid",
+      "Categories",
+      "Cart",
+      "Newsletter",
+      "Customer Support"
+    ],
+    "recommendedSections": [
+      "Hero",
+      "Categories",
+      "Featured Products",
+      "Offers",
+      "Testimonials",
+      "Newsletter"
+    ],
+    "suggestedTemplateCategory": "Shop & Ecommerce",
+    "themeDirection": {
+      "style": "Bold Retail",
+      "primaryColor": "#be123c",
+      "accentColor": "#fb7185"
+    },
+    "preview": {
+      "title": "Modern Store",
+      "brand": "MODERN STORE",
+      "tagline": "Everyday products, delivered",
+      "kind": "Ecommerce",
+      "headline": "Shop what you love,\nget it fast.",
+      "blurb": "Browse categories, add to cart and check out in a minute.",
+      "cta": "Shop now",
+      "nav": [
+        "Home",
+        "Shop",
+        "Sale"
+      ],
+      "navButton": "Cart (0)",
+      "stats": [
+        [
+          "500+",
+          "Products"
+        ],
+        [
+          "4.7",
+          "Rating"
+        ],
+        [
+          "48h",
+          "Delivery"
+        ]
+      ],
+      "widgets": [
+        "Products",
+        "Categories",
+        "Cart",
+        "Text",
+        "Button",
+        "Section"
+      ],
+      "selected": "Product grid selected",
+      "ai": "Added products, categories and a cart flow from your brief.",
+      "ready": 88,
+      "tint": [
+        "#fff5f8",
+        "#fbe4ec"
+      ],
+      "ink": "#3b1022"
+    },
+    "isChip": true,
+    "sortOrder": 50
+  },
+  {
+    "slug": "real-estate",
+    "name": "Real Estate",
+    "description": "Real Estate website",
+    "businessType": "Real Estate",
+    "examplePrompt": "A real estate website for property listings, agents, enquiries, locations and featured properties.",
+    "websiteTypeSlug": "realestate",
+    "keywords": [
+      "real estate",
+      "realestate",
+      "property",
+      "properties",
+      "realty",
+      "estate agent",
+      "listings",
+      "rental",
+      "rentals"
+    ],
+    "recommendedPages": [
+      "Home",
+      "About",
+      "Services",
+      "Gallery",
+      "Contact"
+    ],
+    "recommendedFeatures": [
+      "Property Listings",
+      "Agent Profiles",
+      "Enquiry Form",
+      "Google Maps",
+      "Gallery"
+    ],
+    "recommendedSections": [
+      "Hero",
+      "Featured Properties",
+      "Locations",
+      "Agents",
+      "Testimonials",
+      "Enquiry CTA"
+    ],
+    "suggestedTemplateCategory": "Real Estate",
+    "themeDirection": {
+      "style": "Trusted Modern",
+      "primaryColor": "#047857",
+      "accentColor": "#fbbf24"
+    },
+    "preview": {
+      "title": "UrbanNest Realty",
+      "brand": "URBANNEST",
+      "tagline": "Homes for sale and rent",
+      "kind": "Real Estate",
+      "headline": "Find the place\nyou will call home.",
+      "blurb": "Featured properties, trusted agents and a quick enquiry form.",
+      "cta": "View properties",
+      "nav": [
+        "Home",
+        "Listings",
+        "Agents"
+      ],
+      "navButton": "Enquire",
+      "stats": [
+        [
+          "240",
+          "Properties"
+        ],
+        [
+          "18",
+          "Agents"
+        ],
+        [
+          "4.9",
+          "Rating"
+        ]
+      ],
+      "widgets": [
+        "Properties",
+        "Agents",
+        "Enquiry",
+        "Text",
+        "Button",
+        "Section"
+      ],
+      "selected": "Featured listings selected",
+      "ai": "Added property listings, agents and an enquiry form from your brief.",
+      "ready": 89,
+      "tint": [
+        "#f2fbf7",
+        "#e0f3ea"
+      ],
+      "ink": "#0f3a2a"
+    },
+    "isChip": true,
+    "sortOrder": 60
+  },
+  {
+    "slug": "general",
+    "name": "General Business",
+    "description": "General Business website",
+    "businessType": "General Business",
+    "examplePrompt": "",
+    "websiteTypeSlug": "business",
+    "keywords": [],
+    "recommendedPages": [
+      "Home",
+      "About",
+      "Services",
+      "Contact"
+    ],
+    "recommendedFeatures": [
+      "Contact Form",
+      "Services List",
+      "Testimonials",
+      "Location"
+    ],
+    "recommendedSections": [
+      "Hero",
+      "Services",
+      "About",
+      "Testimonials",
+      "Contact CTA"
+    ],
+    "suggestedTemplateCategory": "Professional Services",
+    "themeDirection": {
+      "style": "Clean Professional",
+      "primaryColor": "#4338ca",
+      "accentColor": "#38bdf8"
+    },
+    "preview": {
+      "title": "Your Business",
+      "brand": "YOUR BUSINESS",
+      "tagline": "A website made for you",
+      "kind": "Business",
+      "headline": "Say what you do,\nclearly.",
+      "blurb": "A simple site with your services, your story and a way to get in touch.",
+      "cta": "Get in touch",
+      "nav": [
+        "Home",
+        "Services",
+        "About"
+      ],
+      "navButton": "Contact",
+      "stats": [
+        [
+          "10+",
+          "Services"
+        ],
+        [
+          "4.8",
+          "Rating"
+        ],
+        [
+          "24h",
+          "Reply"
+        ]
+      ],
+      "widgets": [
+        "Services",
+        "About",
+        "Contact",
+        "Text",
+        "Button",
+        "Section"
+      ],
+      "selected": "Hero headline selected",
+      "ai": "Added services, about and a contact flow from your brief.",
+      "ready": 85,
+      "tint": [
+        "#f7f7fb",
+        "#eceff7"
+      ],
+      "ink": "#1f2540"
+    },
+    "isChip": false,
+    "sortOrder": 70
+  }
+]

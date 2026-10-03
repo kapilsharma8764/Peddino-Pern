@@ -94,3 +94,37 @@
 @media (prefers-reduced-motion: reduce) {
   .auth-success-backdrop, .auth-success-dialog, .auth-success-icon, .auth-success-loading i { animation: none; }
 }
+
+/* One page scroll keeps every account mode and the footer reachable. */
+.interior-shell .route-sign-in .studio-auth { padding: 0; overflow-y: auto; overflow-x: hidden; }
+.interior-shell .auth-content { padding: 40px 24px; }
+.interior-shell .route-sign-in .auth-grid { width: min(1120px, 100%); height: auto; min-height: 0; margin: auto; gap: clamp(28px, 5vw, 68px); align-items: center; }
+.interior-shell .route-sign-in .auth-story { padding: 32px; border: 1px solid #e7ddf4; border-radius: 24px; background: linear-gradient(145deg, #f7f2ff, #efe6fc); }
+.interior-shell .route-sign-in .auth-story h1 { color: #302044; font-size: clamp(36px, 4vw, 52px); line-height: 1.13; letter-spacing: -2px; font-weight: 650; }
+.interior-shell .route-sign-in .auth-story em { color: #7c3aed; }
+.interior-shell .route-sign-in .auth-story > p { font-size: 14px; color: #73617d; }
+.interior-shell .route-sign-in .auth-story .editor-scene { margin-top: 32px; padding: 0; }
+.interior-shell .route-sign-in .auth-benefits { display: flex; flex-wrap: wrap; gap: 12px; color: #6c5084; }
+.interior-shell .route-sign-in .auth-panel { width: 100%; max-height: none; padding: 32px; overflow: visible; border: 1px solid #e5dcf0; border-radius: 22px; box-shadow: 0 16px 48px #5134750b; }
+.interior-shell .route-sign-in .auth-panel h2 { font-size: 30px; font-weight: 750; letter-spacing: -1px; margin-block: 12px; }
+.interior-shell .route-sign-in .auth-panel > p { color: #70647d; line-height: 1.7; }
+.interior-shell .route-sign-in .auth-mark { width: 48px; height: 48px; background: #f1e8ff; border-radius: 14px; color: #7c3aed; }
+.interior-shell .route-sign-in .auth-tabs { padding: 5px; border-radius: 12px; background: #f5f0fb; }
+.interior-shell .route-sign-in .auth-tabs button { padding: 11px 8px; border-radius: 8px; color: #766282; }
+.interior-shell .route-sign-in .auth-tabs button.selected { background: #fff; color: #7c3aed; box-shadow: 0 3px 8px #51347512; font-weight: 700; }
+.interior-shell .route-sign-in .auth-form { gap: 18px; }
+.interior-shell .route-sign-in .auth-form label { color: #594765; font-size: 13px; }
+.interior-shell .route-sign-in .auth-form input { height: 48px; border-radius: 10px; background: #fcfaff; font-size: 14px; }
+.interior-shell .route-sign-in .auth-form .studio-button { min-height: 48px; }
+.interior-shell .route-sign-in .auth-panel .auth-error { color: #be123c; }
+.interior-shell .route-sign-in .auth-footnote { color: #6e5b7e; line-height: 1.6; }
+.interior-shell .auth-footer { background: #fff; padding-top: 1px; }
+.interior-shell .auth-footer .mk-footer { border-top: 0; margin-top: 0; }
+@media (max-width: 760px) {
+  .interior-shell .auth-content { padding: 24px 18px; }
+  .interior-shell .route-sign-in .auth-grid { display: flex; flex-direction: column; gap: 24px; }
+  .interior-shell .route-sign-in .auth-story { display: block; width: 100%; padding: 24px; }
+  .interior-shell .route-sign-in .auth-story h1 { font-size: 34px; margin: 16px 0; letter-spacing: -1.3px; }
+  .interior-shell .route-sign-in .auth-story .editor-scene, .interior-shell .route-sign-in .auth-story .auth-benefits { display: none; }
+  .interior-shell .route-sign-in .auth-panel { order: -1; padding: 26px 22px; }
+}

@@ -46,6 +46,41 @@ service configured, the code is shown on the page and in the API console.
 Easiest start: `npm run dev` in this folder runs both, and restarts either one
 if it crashes.
 
+## Content, presets and templates (PostgreSQL)
+
+Marketing copy (Features, How it works, About, Help, Pricing, the home FAQ), pricing plans, website
+types, starter designs, business presets and the widget-based layout templates live in PostgreSQL,
+not in the app bundle. The tables come from the SQL files in `server/migrations/`, applied once each
+when the API starts (`schema_migrations` records which). Fill them once, from `server`:
+
+```bash
+npm run seed:content              # types, designs, presets, pricing, marketing copy (safe to re-run)
+npm run import:layout-templates   # the layout templates; add  -- --dry-run  to only report
+```
+
+(The original HTML templates are separate: `npm run import:templates`.) The seed files are
+`client/src/data/seed/*.json`. The client also keeps them as its offline fallback, so every page still
+shows content while the API is slow or down, and the database copy replaces them when it answers.
+Privacy and Terms are legal text and stay in code.
+
+| API | What |
+|---|---|
+| `GET /api/content/:page` | marketing sections (`features`, `how-it-works`, `about`, `help`, `pricing`, `home`) |
+| `GET /api/pricing`, `/api/pricing/:slug` | pricing plans (no payments behind them) |
+| `GET /api/website-types`, `/api/starter-designs[?type=school]`, `/api/business-presets[/:slug]` | the setup choices |
+| `GET /api/layout-templates?category=&search=&tag=&page=&limit=` | light rows for the gallery |
+| `GET /api/layout-templates/:slug`, `/default?category=`, `/outline` | one template in full / a starting template / names only |
+| `GET/POST/PUT /api/me/business-brief`, `GET/PUT /api/me/onboarding`, `GET/PUT/DELETE /api/me/preferences[/:key]` | the signed-in user's own data |
+
+Per-user data is keyed by the user in the session, never by anything in the request. A signed-in
+person's brief, setup progress and business answers are saved to the account a moment after each
+change, so they follow it to another browser; a guest's stay in that browser's localStorage and move
+to the account on sign-in. A personal Gemini key is **not** stored on the server: it stays in the
+browser, and the API refuses keys, tokens and passwords in preferences and onboarding data.
+
+Rate-limit counters are kept in the `rate_limits` table, so a restart does not reset them. If the
+database cannot be reached the limiters let requests through rather than lock everyone out.
+
 ## 2. Editor
 
 ```bash

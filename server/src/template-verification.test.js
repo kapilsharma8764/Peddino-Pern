@@ -72,17 +72,17 @@ test('CLI exit status catches wrong frontend content using loopback HTTP fixture
   const catalog = JSON.parse(await readFile(new URL('../../client/src/templates/library/original-catalog.json', import.meta.url), 'utf8'))
   const pages = new Map()
   for (const template of catalog) for (const item of template.pages) {
-    pages.set(item.url, await readFile(new URL(item.url.slice(1), publicRoot)))
+    pages.set(new URL(item.url, 'http://localhost').pathname, await readFile(new URL(item.url.slice(1), publicRoot)))
   }
-  const thumbnails = new Set(catalog.map((item) => item.thumbnail))
+  const thumbnails = new Set(catalog.map((item) => new URL(item.thumbnail, 'http://localhost').pathname))
   let mode = 'healthy'
   const handler = (frontend) => (req, res) => {
     if (!frontend && req.url === '/api/templates') {
       res.setHeader('content-type', 'application/json')
       return res.end(JSON.stringify(catalog))
     }
-    if (frontend && ((mode === 'thumbnail' && req.url === catalog[0].thumbnail) ||
-      (mode === 'page' && req.url === catalog[0].pages[0].url))) {
+    if (frontend && ((mode === 'thumbnail' && req.url === new URL(catalog[0].thumbnail, 'http://localhost').pathname) ||
+      (mode === 'page' && req.url === new URL(catalog[0].pages[0].url, 'http://localhost').pathname))) {
       res.setHeader('content-type', 'text/html')
       return res.end('<html>Wrong SPA page</html>')
     }

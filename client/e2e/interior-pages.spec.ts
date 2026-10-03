@@ -1,0 +1,111 @@
+import { test, expect, signUp, freshAccount } from './fixtures'
+
+const publicRoutes = ['/features', '/how-it-works', '/pricing', '/about', '/help', '/contact', '/privacy', '/terms']
+const workspaceRoutes = ['/dashboard', '/leads', '/start', '/create', '/build', '/describe', '/upload', '/templates', '/settings', '/components']
+
+for (const width of [1440, 820, 390]) {
+  test(`non-home pages and account forms remain usable at ${width}px`, async ({ page }, testInfo) => {
+    test.setTimeout(240_000)
+    await page.setViewportSize({ width, height: 900 })
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    const errors: string[] = []
+    page.on('pageerror', error => errors.push(error.message))
+    for (const route of publicRoutes) {
+      await page.goto(route)
+      await expect(page.locator('h1')).toBeVisible()
+      await expect(page.locator('footer[aria-label="Site footer"]')).toBeAttached()
+      expect(await page.locator('[data-mk-page]').evaluate(el => el.scrollWidth <= el.clientWidth + 1), route).toBe(true)
+      await page.locator('[data-mk-page]').evaluate(el => el.scrollTo(0, el.scrollHeight))
+      await expect(page.locator('footer').getByRole('link', { name: 'Privacy Policy' })).toBeVisible()
+      await page.screenshot({ path: testInfo.outputPath(`${route.slice(1)}-${width}.png`) })
+    }
+    await page.goto('/sign-in')
+    await expect(page.locator('form button[type=submit]')).toBeVisible()
+    await page.getByRole('button', { name: 'Create one' }).click()
+    await expect(page.getByLabel('Your name')).toBeVisible()
+    await expect(page.locator('form button[type=submit]')).toBeVisible()
+    await page.getByRole('group', { name: 'Account access' }).getByRole('button', { name: 'Sign in', exact: true }).click()
+    await page.getByRole('button', { name: 'Forgot password?' }).click()
+    await expect(page.getByLabel('Email', { exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Send reset code' })).toBeVisible()
+
+    await signUp(page)
+    await page.waitForURL('/')
+    for (const route of workspaceRoutes) {
+      await page.goto(route)
+      await expect(page.locator('h1,h2').first()).toBeVisible()
+      await expect(page).toHaveURL(new RegExp(`${route}$`))
+      expect(await page.locator('.app-route').evaluate(el => el.scrollWidth <= el.clientWidth + 1), route).toBe(true)
+      await page.screenshot({ path: testInfo.outputPath(`${route.slice(1)}-${width}.png`) })
+    }
+    await page.goto('/start')
+    await page.getByRole('button', { name: /Browse templates/ }).click()
+    await expect(page.locator('[data-testid=onboarding] h1')).toBeVisible()
+    await page.locator('[data-website-type=school]').click()
+    await page.getByRole('button', { name: /^Continue/ }).click()
+    await expect(page.getByLabel(/Website \/ Business name/)).toBeVisible()
+    await page.getByLabel(/Website \/ Business name/).fill('Responsive Studio')
+    await page.getByLabel('Short description').fill('A school that helps students learn and grow.')
+    await page.getByRole('button', { name: /^Continue/ }).click()
+    await expect(page).toHaveURL(/\/templates/)
+    await page.goto('/start')
+    await page.getByRole('button', { name: /Create a site/ }).click()
+    await page.locator('[data-website-type=school]').click()
+    await page.getByRole('button', { name: /^Continue/ }).click()
+    await page.getByLabel(/Website \/ Business name/).fill('Responsive Studio')
+    await page.getByLabel('Short description').fill('A school that helps students learn and grow.')
+    await page.getByRole('button', { name: /^Continue/ }).click()
+    await expect(page).toHaveURL(/\/start\/build\/design/)
+    await page.locator('[data-design]').first().click()
+    await page.getByRole('button', { name: /^Continue/ }).click()
+    await expect(page).toHaveURL(/\/start\/build\/pages/)
+    await expect(page.getByRole('heading', { name: 'Which pages do you need?' })).toBeVisible()
+
+    await page.goto('/dashboard')
+    if (width <= 840) await page.getByRole('button', { name: 'Open menu' }).click()
+    await page.getByRole('navigation', { name: width <= 840 ? 'Mobile navigation' : 'Main navigation' }).getByRole('link', { name: 'Editor', exact: true }).click()
+    await expect(page.locator('.route-editor')).toBeVisible()
+    await page.goto('/new')
+    await expect(page).toHaveURL(/\/create$/)
+    await page.goto('/layouts')
+    await expect(page).toHaveURL(/\/dashboard$/)
+    await page.goto('/missing-page')
+    await expect(page.getByRole('heading', { name: /back on track/ })).toBeVisible()
+    expect(errors).toEqual([])
+  })
+}
+
+test('help search, topic filters and empty-state recovery work together', async ({ page }) => {
+  await page.goto('/help')
+  await page.getByRole('searchbox', { name: 'Search help' }).fill('colours')
+  await expect(page.locator('.mk-faq details')).toHaveCount(1)
+  await page.getByText('How do I change my colours?', { exact: true }).click()
+  await expect(page.locator('.mk-faq details[open]')).toContainText('Theme colours')
+  await page.getByRole('button', { name: 'Publishing & export', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'No answers found' })).toBeVisible()
+  await page.getByRole('button', { name: 'Clear search' }).click()
+  await expect(page.locator('.mk-faq details')).toHaveCount(9)
+  await page.getByRole('button', { name: 'Publishing & export', exact: true }).click()
+  await expect(page.locator('.mk-faq details')).toHaveCount(3)
+})
+
+test('pricing clearly separates available features from planned features', async ({ page }) => {
+  await page.goto('/pricing')
+  await expect(page.locator('.mk-plan.is-featured')).toContainText('Available now')
+  await expect(page.getByRole('region', { name: 'Plan comparison' })).toContainText('Planned')
+  await expect(page.locator('.mk-cta').getByRole('link', { name: 'Ask about a plan' })).toHaveAttribute('href', '/contact')
+})
+
+test('a signed-out building CTA returns to setup after creating an account', async ({ page }) => {
+  const account = freshAccount()
+  await page.goto('/features')
+  await page.locator('.mk-hero').getByRole('link', { name: 'Start building' }).click()
+  await expect(page).toHaveURL(/\/sign-in$/)
+  await page.getByRole('button', { name: 'Create one' }).click()
+  await page.getByLabel('Your name').fill(account.name)
+  await page.getByLabel('Email').fill(account.email)
+  await page.getByLabel('Password', { exact: true }).fill(account.password)
+  await page.locator('form').getByRole('button', { name: 'Create account' }).click()
+  await expect(page).toHaveURL(/\/start$/)
+  await expect(page.getByRole('heading', { name: 'How do you want to start?' })).toBeVisible()
+})

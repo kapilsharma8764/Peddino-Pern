@@ -155,7 +155,35 @@ export const api = {
   aiStatus: () => request<{ available: boolean }>('/api/ai/status'),
   aiComplete: (body: { system: string; messages: { role: 'user' | 'assistant'; text: string }[]; temperature?: number }, signal?: AbortSignal) =>
     request<{ text: string }>('/api/ai/complete', { method: 'POST', body: JSON.stringify(body), signal }),
+
+  // The signed-in user's own data. The server takes the user from the session, never from the request.
+  getBusinessBrief: () => request<{ brief: ServerBrief | null }>('/api/me/business-brief'),
+  saveBusinessBrief: (body: ServerBriefInput, options?: { keepalive?: boolean }) =>
+    request<{ brief: ServerBrief }>('/api/me/business-brief', { method: 'PUT', body: JSON.stringify(body), ...(options?.keepalive ? { keepalive: true } : {}) }),
+  getOnboarding: () => request<{ onboarding: ServerOnboarding | null }>('/api/me/onboarding'),
+  saveOnboarding: (body: ServerOnboardingInput, options?: { keepalive?: boolean }) =>
+    request<{ onboarding: ServerOnboarding }>('/api/me/onboarding', { method: 'PUT', body: JSON.stringify(body), ...(options?.keepalive ? { keepalive: true } : {}) }),
+  getPreferences: () => request<{ preferences: Record<string, unknown> }>('/api/me/preferences'),
+  savePreference: (key: string, value: unknown) =>
+    request<{ key: string; value: unknown }>(`/api/me/preferences/${encodeURIComponent(key)}`, { method: 'PUT', body: JSON.stringify({ value }) }),
+  deletePreference: (key: string) => request<void>(`/api/me/preferences/${encodeURIComponent(key)}`, { method: 'DELETE' }),
 }
+
+/** What `/api/me/business-brief` sends and receives (the server fills in the dates). */
+export interface ServerBriefInput {
+  description: string
+  selectedPreset: string | null
+  businessType?: string | null
+  recommendedPages?: string[]
+  recommendedFeatures?: string[]
+  suggestedTemplateCategory?: string | null
+  themeDirection?: { style?: string | null; primaryColor?: string; accentColor?: string } | null
+  direction?: Record<string, unknown> | null
+}
+export interface ServerBrief extends ServerBriefInput { createdAt: string; updatedAt: string }
+
+export interface ServerOnboardingInput { currentStep: string | null; completedSteps: string[]; onboardingData: Record<string, unknown> }
+export interface ServerOnboarding extends ServerOnboardingInput { updatedAt: string }
 
 /** Where a published page should send its enquiries. */
 export const leadsEndpoint = `${API_URL}/api/leads`

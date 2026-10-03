@@ -75,7 +75,8 @@ export default defineConfig({
 
   webServer: [
     {
-      command: 'node src/index.js',
+      // Seeds the throwaway database (content, presets, layout templates) and then starts the API.
+      command: 'node scripts/e2e-start.mjs',
       cwd: '../server',
       // Readiness is the health endpoint answering, not a timer.
       url: `http://127.0.0.1:${API_PORT}/api/health`,
