@@ -10,8 +10,11 @@
     "start": "node src/index.js",
     "test": "node --test src/**/*.test.js",
     "test:unit": "node --test --test-skip-pattern=integration src/**/*.test.js",
-    "test:integration": "node --test src/auth.integration.test.js src/dynamic.integration.test.js",
+    "test:integration": "node --test src/auth.integration.test.js src/dynamic.integration.test.js src/reset-email.integration.test.js",
     "import:templates": "node scripts/import-templates.mjs",
+    "export:compact-templates": "node scripts/compact-templates.mjs",
+    "trim:compact-templates": "node scripts/compact-templates.mjs --trim",
+    "import:compact-templates": "node scripts/compact-templates.mjs --import",
     "verify:live-templates": "node scripts/verify-live-templates.mjs",
     "seed:content": "node scripts/seed-content.mjs",
     "import:layout-templates": "node scripts/import-layout-templates.mjs"

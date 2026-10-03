@@ -1,3 +1,4 @@
+import './load-env.js'
 import { after, before, describe, test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createHmac, randomBytes } from 'node:crypto'
@@ -219,6 +220,26 @@ describe('auth integration (PostgreSQL + JWT)', { skip }, () => {
       assert.equal(res.body.token, undefined)
     }
     assert.equal(wrong.body.error, unknown.body.error, 'must not reveal which emails have accounts')
+  })
+
+  test('password reset stores a hash, rejects wrong codes and prevents reusing a code', async () => {
+    const account = { email: emailFor('reset'), password: freshPassword(), name: 'Reset Test' }
+    assert.equal((await call('POST', '/api/auth/register', { body: account })).status, 201)
+    const forgot = await call('POST', '/api/auth/forgot', { body: { email: account.email } })
+    assert.equal(forgot.status, 200)
+    const code = forgot.body.devCode
+    assert.match(code, /^\d{6}$/)
+    const stored = await users.findOne({ email: account.email })
+    assert.ok(!stored.reset.hash.includes(code))
+    const password = freshPassword()
+    const wrong = code === '000000' ? '111111' : '000000'
+    assert.equal((await call('POST', '/api/auth/reset', { body: { email: account.email, code: wrong, password } })).status, 400)
+    const reset = await call('POST', '/api/auth/reset', { body: { email: account.email, code, password } })
+    assert.equal(reset.status, 200)
+    assert.doesNotMatch(reset.raw, /password|hash/)
+    assert.equal((await call('POST', '/api/auth/login', { body: { email: account.email, password: account.password } })).status, 401)
+    assert.equal((await call('POST', '/api/auth/login', { body: { email: account.email, password } })).status, 200)
+    assert.equal((await call('POST', '/api/auth/reset', { body: { email: account.email, code, password } })).status, 400)
   })
 
   // ?? bearer tokens ????????????????????????????????????????????????????????

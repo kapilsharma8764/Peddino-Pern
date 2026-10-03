@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
-import { DuplicateError, closeStore, find, get, getTemplateAsset, getTemplateCatalog, increment, insert, list, remove, update } from './store.js'
+import { DatabaseUnavailableError, DuplicateError, checkDatabase, closeStore, find, get, getTemplateAsset, getTemplateCatalog, increment, insert, list, remove, update } from './store.js'
 import { templateAssetHandler } from './template-assets.js'
 import { uniqueSlug } from './slug.js'
 import { publishedPageLinks } from './published-links.js'
@@ -24,6 +24,8 @@ import { registerMeRoutes } from './routes/me.js'
 import { cachedFor } from './ttl-cache.js'
 import { createViewCounter } from './views.js'
 import { googleSignInEnabled, verifyGoogleCredential } from './google-auth.js'
+import { registerHealthRoute } from './health.js'
+import { resetEmailEnabled, sendResetEmail } from './reset-email.js'
 
 /**
  * The API behind the builder: saving a site, publishing it to a public
@@ -116,6 +118,7 @@ app.use((req, res, next) => {
 // everyone a fresh allowance. If the database is unreachable the limiters let
 // requests through (`passOnStoreError`) instead of locking everyone out.
 const limiterStore = (name) => ({ store: new PgRateLimitStore(name), passOnStoreError: true })
+registerHealthRoute(app, checkDatabase)
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -148,9 +151,6 @@ function asyncRoute(handler) {
   return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next)
 }
 
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true })
-})
 
 
 // ── Accounts ───────────────────────────────────────────────────────────────
@@ -273,10 +273,8 @@ app.post(
 // ── Forgotten passwords ─────────────────────────────────────────────────────
 //
 // Step one issues a six-digit code valid for 15 minutes; step two trades that
-// code for a new password. Only a hash of the code is stored. There is no mail
-// service wired up, so outside production the code is returned to the page and
-// printed in the server console; in production neither happens and the
-// response never reveals whether the address has an account.
+// code for a new password. Only a hash of the code is stored. Production sends
+// the code by email; local development returns it for testing.
 
 const RESET_MINUTES = 15
 const RESET_ATTEMPTS = 5
@@ -288,6 +286,9 @@ app.post(
   asyncRoute(async (req, res) => {
     const address = normaliseEmail(req.body?.email)
     if (!address.includes('@')) return res.status(400).json({ error: 'Please enter your email address' })
+    if (IS_PRODUCTION && !resetEmailEnabled()) {
+      return res.status(503).json({ error: 'Password reset email is not available yet. Please contact the site owner.' })
+    }
 
     const reply = { ok: true, message: 'If that email has an account, a reset code has been issued.' }
     const user = await find('users', (row) => row.email === address)
@@ -305,7 +306,14 @@ app.post(
       },
     })
 
-    if (IS_PRODUCTION) return res.json(reply)
+    if (IS_PRODUCTION) {
+      try {
+        await sendResetEmail(address, code)
+      } catch {
+        return res.status(503).json({ error: 'The reset email could not be sent. Please try again later.' })
+      }
+      return res.json(reply)
+    }
     console.log(`[auth] password reset code for ${address}: ${code}`)
     res.json({ ...reply, message: `Your reset code is ready. It expires in ${RESET_MINUTES} minutes.`, devCode: code })
   }),
@@ -727,6 +735,9 @@ app.use((error, _req, res, _next) => {
     return res.status(400).json({ error: 'That request was not valid.' })
   }
   console.error('[api]', error)
+  if (error instanceof DatabaseUnavailableError) {
+    return res.status(503).json({ error: 'The service is temporarily unavailable. Please try again later.' })
+  }
   res.status(500).json({ error: 'Something went wrong on the server' })
 })
 

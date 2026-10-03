@@ -86,7 +86,7 @@ describe('content, templates, per-user data and rate limits (PostgreSQL)', { ski
 
   test('every migration is applied once and re-running changes nothing', async () => {
     const done = (await admin.query(`SELECT name FROM "${SCHEMA}".schema_migrations ORDER BY name`)).rows.map((row) => row.name)
-    assert.deepEqual(done, ['001_content_tables.sql', '002_layout_templates.sql', '003_user_data.sql', '004_rate_limits.sql'])
+    assert.deepEqual(done, ['001_content_tables.sql', '002_layout_templates.sql', '003_user_data.sql', '004_rate_limits.sql', '005_template_blobs.sql'])
     const pool = new pg.Pool({ connectionString: PG_URL })
     try { assert.deepEqual(await migrate(pool, SCHEMA), []) } finally { await pool.end() }
   })
@@ -100,6 +100,25 @@ describe('content, templates, per-user data and rate limits (PostgreSQL)', { ski
   })
 
   // ── content, pricing, catalog ───────────────────────────────────────────
+
+  test('shared template bytes serve every original URL and legacy rows still work', async () => {
+    const data = Buffer.from('<html><body>Shared template</body></html>')
+    await admin.query(`INSERT INTO "${SCHEMA}".template_blobs (hash, data) VALUES ($1, $2)`, ['shared-hash', data])
+    for (const id of ['original-templates/first/index.html', 'original-templates/second/index.html']) {
+      await admin.query(`INSERT INTO "${SCHEMA}".template_assets
+        (id, lc, content_type, hash, blob_hash) VALUES ($1, $1, $2, $3, $3)`, [id, 'text/html', 'shared-hash'])
+      const response = await fetch(`${baseUrl}/${id}`)
+      assert.equal(response.status, 200)
+      assert.equal(await response.text(), data.toString())
+    }
+    assert.equal(await count('template_blobs'), 1)
+    const legacyId = 'original-templates/legacy/index.html'
+    await admin.query(`INSERT INTO "${SCHEMA}".template_assets
+      (id, lc, content_type, hash, data) VALUES ($1, $1, $2, $3, $4)`, [legacyId, 'text/html', 'legacy-hash', data])
+    assert.equal(await (await fetch(`${baseUrl}/${legacyId}`)).text(), data.toString())
+    await assert.rejects(admin.query(`INSERT INTO "${SCHEMA}".template_assets
+      (id, lc, content_type, hash) VALUES ('missing-bytes', 'missing-bytes', 'text/html', 'none')`), /template_asset_has_data/)
+  })
 
   test('pricing: list, one plan, unknown and malformed names', async () => {
     const list = await call('GET', '/api/pricing')

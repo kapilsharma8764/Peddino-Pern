@@ -44,7 +44,18 @@ const COLLECTIONS = new Set(['users', 'sites', 'leads'])
 
 let pool = null
 let ready = null
+
+export class DatabaseUnavailableError extends Error {
+  constructor(cause) {
+    super('The database is unavailable', { cause })
+    this.name = 'DatabaseUnavailableError'
+  }
+}
+
 async function database() {
+  if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL) {
+    throw new DatabaseUnavailableError()
+  }
   if (!pool) {
     // A short, explicit timeout: if the database is unreachable, a request
     // fails in a few seconds with a clear error rather than hanging.
@@ -63,7 +74,11 @@ async function database() {
       ready = null
     })
   }
-  await ready
+  try {
+    await ready
+  } catch (error) {
+    throw new DatabaseUnavailableError(error)
+  }
   return pool
 }
 
@@ -114,6 +129,11 @@ async function createTables(db) {
 
 /** The ready pool (tables created) — for the import scripts. */
 export const connect = database
+
+export async function checkDatabase() {
+  const db = await database()
+  await db.query('SELECT 1')
+}
 
 /** Closes the connection cleanly — used when the server shuts down. */
 export async function closeStore() {
@@ -243,11 +263,15 @@ export async function getTemplateAsset(id, { loose = false } = {}) {
   const db = await database()
   const { rows } = loose
     ? await db.query(
-        `SELECT content_type, encoding, hash, data FROM ${table('template_assets')} WHERE lc = $1 LIMIT 1`,
+        `SELECT a.content_type, a.encoding, a.hash, COALESCE(a.data, b.data) AS data
+         FROM ${table('template_assets')} a LEFT JOIN ${table('template_blobs')} b ON a.blob_hash = b.hash
+         WHERE a.lc = $1 LIMIT 1`,
         [id.toLowerCase()],
       )
     : await db.query(
-        `SELECT content_type, encoding, hash, data FROM ${table('template_assets')} WHERE id = $1`,
+        `SELECT a.content_type, a.encoding, a.hash, COALESCE(a.data, b.data) AS data
+         FROM ${table('template_assets')} a LEFT JOIN ${table('template_blobs')} b ON a.blob_hash = b.hash
+         WHERE a.id = $1`,
         [id],
       )
   const row = rows[0]
