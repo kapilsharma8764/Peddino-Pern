@@ -20,8 +20,16 @@ export async function migrationFiles(dir = DIR) {
 }
 
 export async function applyMigrations(pool, schema, dir = DIR) {
-  const client = await pool.connect()
   const target = quote(schema)
+  // The usual start: everything is already applied, so no lock is needed. (Through a
+  // transaction-mode pooler such as Supabase's port 6543 a session lock is unreliable,
+  // so it is only taken when there is something to apply.)
+  try {
+    const { rows } = await pool.query(`SELECT name FROM ${target}.schema_migrations`)
+    const applied = new Set(rows.map((row) => row.name))
+    if ((await migrationFiles(dir)).every((name) => applied.has(name))) return []
+  } catch { /* the table is not there yet: the first run, below */ }
+  const client = await pool.connect()
   try {
     await client.query('SELECT pg_advisory_lock($1)', [LOCK_ID])
     await client.query(
