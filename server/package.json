@@ -14,6 +14,7 @@
     "import:templates": "node scripts/import-templates.mjs",
     "export:compact-templates": "node scripts/compact-templates.mjs",
     "trim:compact-templates": "node scripts/compact-templates.mjs --trim",
+    "fit:compact-templates": "node scripts/compact-templates.mjs --fit",
     "import:compact-templates": "node scripts/compact-templates.mjs --import",
     "verify:live-templates": "node scripts/verify-live-templates.mjs",
     "seed:content": "node scripts/seed-content.mjs",

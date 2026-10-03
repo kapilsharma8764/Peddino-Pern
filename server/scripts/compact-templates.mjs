@@ -1,14 +1,16 @@
 import '../src/load-env.js'
 import pg from 'pg'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, stat, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
 import { createHash, randomBytes } from 'node:crypto'
-import { compactAsset, dropLargeVideos } from '../src/compact-assets.js'
+import { compactAsset, dropLargeVideos, fitToBudget } from '../src/compact-assets.js'
 
 const output = fileURLToPath(new URL('../data/compact-templates/', import.meta.url))
 const limit = 750 * 1024 * 1024 // leave room for indexes, content and users in a 1 GB database
 const maxVideo = Number(process.env.MAX_VIDEO_MB ?? 3) * 1024 * 1024 // bigger videos stay out of the hosted copy
+const fitBudget = Number(process.env.FIT_MB ?? 300) * 1024 * 1024 // the template files in a database whose plan is 512 MB
+const planLimitMb = Number(process.env.DB_LIMIT_MB ?? 512)
 const mb = (bytes) => `${(bytes / 1048576).toFixed(1)} MB`
 
 async function exportLocal() {
@@ -84,16 +86,29 @@ async function importHosted() {
   let db
   try {
     db = await connect()
+    // A run that stopped halfway (a dropped connection) resumes: files already stored are not sent again.
+    const stored = new Set((await db.query(`SELECT hash FROM ${schema}.template_blobs`)).rows.map((row) => row.hash))
     // Blob batches bound memory and avoid a network round trip for every asset.
-    let hashes = [], buffers = [], batchBytes = 0
+    let hashes = [], buffers = [], batchBytes = 0, sent = 0
     const flush = async () => {
       if (!hashes.length) return
-      await db.query(`INSERT INTO ${schema}.template_blobs (hash, data)
-        SELECT * FROM unnest($1::text[], $2::bytea[]) ON CONFLICT (hash) DO NOTHING`, [hashes, buffers])
+      for (let attempt = 1; ; attempt += 1) {
+        try {
+          await db.query(`INSERT INTO ${schema}.template_blobs (hash, data)
+            SELECT * FROM unnest($1::text[], $2::bytea[]) ON CONFLICT (hash) DO NOTHING`, [hashes, buffers])
+          break
+        } catch (error) {
+          if (attempt === 4) throw error
+          await new Promise((resolve) => setTimeout(resolve, 1500 * attempt))
+        }
+      }
+      sent += hashes.length
+      if (sent % 3000 < hashes.length) console.log(`Stored ${sent} new files`)
       hashes = []; buffers = []; batchBytes = 0
     }
     for (const blob of manifest.blobs) {
       if (!/^[a-f0-9]{64}$/.test(blob.hash)) throw new Error('Invalid export hash')
+      if (stored.has(blob.hash)) continue
       const data = await readFile(join(output, 'blobs', blob.hash))
       if (data.length !== blob.size || createHash('sha256').update(data).digest('hex') !== blob.hash) {
         throw new Error('An exported asset is incomplete or changed')
@@ -124,7 +139,7 @@ async function importHosted() {
     const size = await db.query(`SELECT sum(pg_total_relation_size(quote_ident(schemaname)||'.'||quote_ident(tablename)))::bigint AS bytes
       FROM pg_tables WHERE schemaname=$1`, [SCHEMA])
     console.log(`Database schema size: ${mb(Number(size.rows[0].bytes))}`)
-    if (Number(size.rows[0].bytes) > 900 * 1024 * 1024) throw new Error('The imported schema leaves too little space for users in a 1 GB database')
+    if (Number(size.rows[0].bytes) > planLimitMb * 0.8 * 1024 * 1024) throw new Error(`The imported schema leaves too little space for users in a ${planLimitMb} MB database`)
   } finally {
     if (verify && db) {
       if (!/^sb_test_compact_[a-f0-9]{16}$/.test(SCHEMA)) throw new Error('Invalid verification schema')
@@ -133,6 +148,17 @@ async function importHosted() {
     }
     await closeStore()
   }
+}
+
+/** Cuts an export down to the templates that fit FIT_MB, keeping the full export beside it as manifest.all.json. */
+async function fitExisting() {
+  const file = join(output, 'manifest.json')
+  const all = join(output, 'manifest.all.json')
+  const exists = await stat(all).then(() => true, () => false)
+  if (!exists) await copyFile(file, all)
+  const fitted = fitToBudget(JSON.parse(await readFile(all, 'utf8')), fitBudget)
+  await writeFile(file, JSON.stringify(fitted))
+  console.log(`Fits ${mb(fitBudget)}: ${fitted.catalog.length} original templates (${fitted.leftOutTemplates.length} left out), ${fitted.assets.length} URLs, ${fitted.blobs.length} files, ${mb(fitted.bytes)}`)
 }
 
 /** Applies the video limit to an export that was made without it, without redoing the image work. */
@@ -145,7 +171,8 @@ async function trimExisting() {
 }
 
 try {
-  if (process.argv.includes('--trim')) await trimExisting()
+  if (process.argv.includes('--fit')) await fitExisting()
+  else if (process.argv.includes('--trim')) await trimExisting()
   else if (process.argv.includes('--import') || process.argv.includes('--verify-export')) await importHosted()
   else await exportLocal()
 } catch (error) {
