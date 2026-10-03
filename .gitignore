@@ -44,3 +44,4 @@ client/public/templates/
 client/public/gallery/
 *.err.log
 import.log
+.vercel

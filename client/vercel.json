@@ -4,8 +4,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/original-templates/:path+", "destination": "https://peddino-ai-elementor-api.vercel.app/original-templates/:path+" },
-    { "source": "/templates/:path+", "destination": "https://peddino-ai-elementor-api.vercel.app/templates/:path+" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

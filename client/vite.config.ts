@@ -47,8 +47,9 @@ export default defineConfig(({ mode }) => {
   // A live build with no API address would quietly call http://localhost:8001
   // from every visitor's browser. Stop the build instead of shipping that.
   if (env.VERCEL && mode === 'production') {
-    if (!env.VITE_API_URL) throw new Error('VITE_API_URL is not set. Add it in Vercel → Settings → Environment Variables (the https:// address of the API), then redeploy.')
-    if (!/^https:\/\//.test(env.VITE_API_URL)) throw new Error(`VITE_API_URL must be an https:// address on Vercel (got "${env.VITE_API_URL}") — a browser blocks an https page from calling http.`)
+    if (env.VITE_API_URL === undefined) throw new Error('VITE_API_URL is not set. Use the root Vercel services configuration, or set an HTTPS API address in Vercel Settings.')
+    // An empty address uses the API service on the same domain.
+    if (env.VITE_API_URL !== '' && !/^https:\/\//.test(env.VITE_API_URL)) throw new Error(`VITE_API_URL must be empty or an https:// address on Vercel (got "${env.VITE_API_URL}").`)
     // vercel.json forwards the template URLs to the API. If its address is still
     // the placeholder, every template would open blank on the live site.
     const config = path.resolve(__dirname, 'vercel.json')

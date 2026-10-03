@@ -1,0 +1,15 @@
+.git
+node_modules
+**/node_modules
+**/.env
+**/.env.*
+**/dist
+client/public/original-templates
+client/public/templates
+client/public/gallery
+client/e2e
+client/test-results
+client/playwright-report
+reports
+server/data
+*.log
