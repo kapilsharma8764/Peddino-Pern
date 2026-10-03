@@ -1,5 +1,6 @@
 import type { SectionColors, SiteConfig } from '@/blocks/types'
 import { readSectionColors, writeSectionColors } from '@/lib/original-sections'
+import { safeEdits, type ColourEdits } from '@/lib/section-colour-probe'
 
 /** The saved source stays authoritative; never save a script-mutated preview DOM. */
 export const NODE_ATTR = 'data-builder-node'
@@ -153,6 +154,23 @@ export function patchOriginal(html: string, id: string, patch: VisualPatch): str
     if (!safeVisualUrl(patch.backgroundImage, true)) throw new Error('Use an image address or upload an image.')
     if (patch.backgroundImage) el.style.setProperty('background-image', `url(${JSON.stringify(patch.backgroundImage)})`, 'important')
     else el.style.removeProperty('background-image')
+  }
+  doc.querySelectorAll(`[${NODE_ATTR}]`).forEach(node => node.removeAttribute(NODE_ATTR))
+  return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML
+}
+
+/**
+ * Writes colour edits (node id -> colour property -> `#rrggbb`) into the saved page as inline styles on exactly
+ * those elements. Anything that is not a known colour property with a real colour is dropped.
+ */
+export function recolorOriginal(html: string, edits: ColourEdits): string {
+  const clean = safeEdits(edits)
+  const doc = parseOriginal(html)
+  const nodes = new Map([...doc.body.querySelectorAll<HTMLElement>(`[${NODE_ATTR}]`)].map(el => [el.getAttribute(NODE_ATTR)!, el]))
+  for (const [id, props] of Object.entries(clean)) {
+    const el = nodes.get(id)
+    if (!el) continue
+    for (const [property, value] of Object.entries(props)) el.style.setProperty(property, value, 'important')
   }
   doc.querySelectorAll(`[${NODE_ATTR}]`).forEach(node => node.removeAttribute(NODE_ATTR))
   return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML

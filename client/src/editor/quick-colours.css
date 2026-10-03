@@ -1,0 +1,28 @@
+/* The "Colours" button on the bar over a selected item, and the panel it opens. */
+.canvas-selection-tools.has-colours{max-width:none}
+.quick-colours{position:fixed;z-index:60;width:340px;max-width:calc(100vw - 16px);max-height:min(70vh,560px);display:flex;flex-direction:column;background:#fff;color:#1f2540;border:1px solid #d9d4f2;border-radius:14px;box-shadow:0 18px 50px #2a1a6a30;font-size:12px}
+.quick-colours>header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 6px}
+.quick-colours>header strong{font-size:13px}
+.quick-colours>header button{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;color:#5d6580;cursor:pointer}
+.quick-colours>header button:hover{background:#f1ecff;color:#5b3df0}
+.quick-colours-tabs{display:flex;gap:4px;padding:0 10px 8px;border-bottom:1px solid #ece8fb}
+.quick-colours-tabs button{flex:1;padding:6px 4px;border-radius:8px;border:1px solid transparent;background:#f6f4ff;color:#4b4f6b;font-size:11.5px;font-weight:600;cursor:pointer}
+.quick-colours-tabs button[aria-selected="true"]{background:#5b3df0;color:#fff}
+.quick-colours-tabs button:focus-visible,.quick-colours-sets button:focus-visible,.quick-colours>header button:focus-visible{outline:2px solid #8b5cf6;outline-offset:2px}
+.quick-colours-body{padding:10px 12px 12px;overflow-y:auto}
+.quick-colours-note{margin:0 0 10px;color:#66708a;font-size:11.5px;line-height:1.45}
+.quick-colours-fields{display:grid;gap:8px;margin-top:10px}
+.quick-colours-fields label{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.quick-colours-fields label>span{color:#4b4f6b}
+.quick-colours-sets{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}
+.quick-colours-sets button{display:grid;gap:4px;justify-items:center;padding:0;background:none;border:0;cursor:pointer}
+.quick-colours-sets .swatch{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:1;border:1px solid #d9d4f2;border-radius:10px;font-size:13px;transition:transform .15s,box-shadow .15s}
+.quick-colours-sets .swatch i{position:absolute;right:4px;bottom:4px;width:11px;height:11px;border-radius:50%;box-shadow:0 0 0 1.5px #fff}
+.quick-colours-sets button:hover .swatch{transform:translateY(-2px);box-shadow:0 6px 14px #3a2a8a2e}
+.quick-colours-sets small{font-size:9.5px;line-height:1.1;color:#4b4f6b;text-align:center}
+.quick-colours-error{margin:0 0 8px;color:#c62828;font-size:11.5px}
+.quick-colours .visual-controls{padding:0}
+@media (max-width:480px){.quick-colours{width:calc(100vw - 16px)}.quick-colours-sets{grid-template-columns:repeat(4,1fr)}}
+@media (prefers-reduced-motion:reduce){.quick-colours-sets .swatch{transition:none}}
+.quick-colours-styles>summary{cursor:pointer;color:#5d6580;font-weight:600;font-size:11.5px;padding:4px 0}
+.quick-colours-styles[open]>summary{margin-bottom:8px}

@@ -1,0 +1,16 @@
+/* The colours-used-in-this-selection block, in the Colours tab and in the Colours panel. */
+.section-colours{padding:2px 0 12px;margin-bottom:12px;border-bottom:1px solid #ece8fb;font-size:12px;color:#20243b}
+.section-colours h3{margin:0 0 2px;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#5b3df0}
+.section-colours-editing{margin:0 0 8px;color:#626c84}
+.section-colours-editing strong{color:#20243b;font-weight:700}
+.section-colours-whole{display:flex;align-items:center;gap:6px;margin:0 0 8px;color:#343b55;cursor:pointer}
+.section-colours-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.section-colours-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.section-colours-row>span{color:#343b55;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.section-colours-note{display:flex;align-items:flex-start;gap:6px;margin:8px 0 0;color:#74809a;font-size:11px;line-height:1.45}
+.section-colours-more{margin-top:10px}
+.section-colours-more summary{cursor:pointer;color:#5b3df0;font-weight:700;font-size:11.5px;padding:2px 0}
+.section-colours-more .section-colours-list{margin-top:8px}
+/* In the Colours tab it sits flush with the other panels' content. */
+.visual-colors-scroll .section-colours{padding:16px 20px 14px;margin-bottom:0}
+.visual-colors-scroll .section-colours .section-colours-row{gap:6px}

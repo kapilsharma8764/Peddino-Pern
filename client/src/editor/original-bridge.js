@@ -21,11 +21,67 @@
     if (scroll) el.scrollIntoView({ block: 'center', behavior: 'instant' });
     bounds();
     var style = getComputedStyle(el);
-    send('visual-select', { id: el.getAttribute(attr), color: style.color, background: style.backgroundColor, backgroundImage: style.backgroundImage, fontSize: style.fontSize, align: style.textAlign });
+    send('visual-select', { focused: !!scroll, id: el.getAttribute(attr), color: style.color, background: style.backgroundColor, backgroundImage: style.backgroundImage, fontSize: style.fontSize, align: style.textAlign });
+  }
+
+  // ── Colours used inside a selection (read here, because only this page can see its computed styles) ──
+  function ownText(el) { for (var n = el.firstChild; n; n = n.nextSibling) { if (n.nodeType === 3 && n.nodeValue.trim()) return true; } return false; }
+  var BUTTONLIKE = 'button,[role="button"],input[type="submit"],input[type="button"]';
+  function clear(c) { return !c || c === 'transparent' || c === 'rgba(0, 0, 0, 0)'; }
+  function buttonLike(a) {
+    if (!a) return false;
+    if (a.matches(BUTTONLIKE)) return true;
+    if (/(^|[\s_-])(btn|button|cta)([\s_-]|$)/i.test(typeof a.className === 'string' ? a.className : '')) return true;
+    return a.matches('a') && !clear(getComputedStyle(a).backgroundColor);
+  }
+  function sendColours(id) {
+    var root = locate(id);
+    if (!root) return send('pt-colors-result', { id: id, area: 0, rootBg: '', rootGradient: false, rootImage: false, entries: [] });
+    var rr = root.getBoundingClientRect(), rcs = getComputedStyle(root);
+    var list = [root].concat([].slice.call(root.querySelectorAll('[' + attr + ']'))).slice(0, 2500);
+    var entries = [];
+    list.forEach(function (el) {
+      var cs = getComputedStyle(el);
+      var r = el.getBoundingClientRect();
+      var hidden = cs.display === 'none' || cs.visibility === 'hidden' || (el !== root && (r.width < 1 || r.height < 1));
+      var tag = el.tagName.toLowerCase(), props = [], button = buttonLike(el);
+      if (!clear(cs.backgroundColor)) props.push({ p: 'background-color', c: cs.backgroundColor, r: button ? 'buttonBg' : 'background' });
+      if (el instanceof SVGElement) {
+        if (cs.fill && cs.fill !== 'none' && cs.fill !== 'rgb(0, 0, 0)') props.push({ p: 'fill', c: cs.fill, r: 'icon' });
+        if (cs.stroke && cs.stroke !== 'none') props.push({ p: 'stroke', c: cs.stroke, r: 'icon' });
+      } else {
+        var icon = tag === 'i' || /(^|[\s_-])(fa|fas|far|fab|fal|icon|bi|ti|lni|glyphicon|material-icons)([\s_-]|$)/i.test(typeof el.className === 'string' ? el.className : '');
+        if (ownText(el) || (icon && !el.children.length)) {
+          var role = icon && !ownText(el) ? 'icon' : /^h[1-6]$/.test(tag) || el.closest('h1,h2,h3,h4,h5,h6') ? 'heading' : (button || buttonLike(el.closest('a,button,[role="button"]'))) ? 'buttonText' : el.closest('a') ? 'link' : 'text';
+          props.push({ p: 'color', c: cs.color, r: role });
+        }
+        ['top', 'right', 'bottom', 'left'].forEach(function (side) {
+          var style = cs['border' + side.charAt(0).toUpperCase() + side.slice(1) + 'Style'], width = parseFloat(cs['border' + side.charAt(0).toUpperCase() + side.slice(1) + 'Width']), color = cs['border' + side.charAt(0).toUpperCase() + side.slice(1) + 'Color'];
+          if (style && style !== 'none' && style !== 'hidden' && width > 0 && !clear(color)) props.push({ p: 'border-' + side + '-color', c: color, r: 'border' });
+        });
+      }
+      if (props.length) entries.push({ id: el.getAttribute(attr), area: hidden ? 0 : Math.round(r.width * r.height), h: hidden ? 1 : 0, props: props });
+    });
+    send('pt-colors-result', { id: id, area: Math.round(rr.width * rr.height), rootBg: rcs.backgroundColor, rootGradient: /gradient\(/.test(rcs.backgroundImage), rootImage: /url\(/.test(rcs.backgroundImage), entries: entries });
+  }
+  var COLOUR_PROPS = ['background-color', 'color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color', 'fill', 'stroke', 'background-image'];
+  function paintNow(edits) {
+    Object.keys(edits || {}).forEach(function (id) {
+      var el = locate(id);
+      if (!el) return;
+      Object.keys(edits[id]).forEach(function (prop) {
+        var value = edits[id][prop];
+        if (COLOUR_PROPS.indexOf(prop) < 0 || !(/^#[0-9a-f]{6}$/i.test(value) || (prop === 'background-image' && value === 'none'))) return;
+        el.style.setProperty(prop, value, 'important');
+      });
+    });
+    bounds();
   }
   window.addEventListener('message', function (event) {
     if (event.source !== parent || !event.data || event.data.key !== options.key) return;
     if (event.data.type === 'visual-focus') select(locate(event.data.id), true);
+    if (event.data.type === 'pt-colors') sendColours(event.data.id);
+    if (event.data.type === 'pt-recolor') paintNow(event.data.edits);
     if (event.data.type === 'pt-page-colors') {
       var pageStyle = document.getElementById('pt-page-colors');
       if (pageStyle) pageStyle.textContent = event.data.css || '';

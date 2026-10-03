@@ -132,10 +132,10 @@ export function OriginalPageColors() {
   const resetTheme = useConfigStore(s => s.resetTheme)
   const page = config.pages?.find(page => page.id === id)
   return <div className="visual-controls" onFocusCapture={beginHistoryGroup} onBlurCapture={endHistoryGroup}>
-    <h3>Page colours ? {page?.name}</h3>
-    <p className="visual-muted">Only this page?s content changes. Reset a colour to restore the original design.</p>
+    <h3>Page colours: {page?.name}</h3>
+    <p className="visual-muted">Only this page’s content changes. Reset a colour to restore the original design.</p>
     {(['background', 'text', 'heading'] as const).map(key => <div key={key} className="flex items-center justify-between gap-2 my-2">
-      <span>{key}</span><HexColorField compact label={`Page ${key}`} value={page?.colors?.[key]} onChange={hex => update(id, { ...page?.colors, [key]: hex })} onReset={() => update(id, { ...page?.colors, [key]: undefined })} />
+      <span className="capitalize">{key}</span><HexColorField compact label={`Page ${key}`} value={page?.colors?.[key]} onChange={hex => update(id, { ...page?.colors, [key]: hex })} onReset={() => update(id, { ...page?.colors, [key]: undefined })} />
     </div>)}
     <h3>Shared header and footer</h3>
     {REGION_TOKENS.filter(([key]) => !/Link|Button/.test(key)).map(([key, label]) => <div key={key} className="flex items-center justify-between gap-2 my-2">
