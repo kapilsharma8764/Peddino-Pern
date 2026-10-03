@@ -1,0 +1,20 @@
+{
+  "name": "sitebuilder",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Standalone visual website builder — one command runs every check across the client and the API.",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently --names api,editor --restart-tries 10 --restart-after 2000 \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "verify": "node scripts/verify.mjs",
+    "verify:quick": "node scripts/verify.mjs --skip-install --only=lint,typecheck,unit",
+    "verify:e2e": "node scripts/verify.mjs --skip-install --only=build,e2e",
+    "e2e:report": "npm --prefix client exec -- playwright show-report playwright-report",
+    "import:colorlib": "node scripts/import-colorlib.mjs",
+    "import:nicepage": "node scripts/import-nicepage.mjs",
+    "import:nicepage-export": "node scripts/import-nicepage-export.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

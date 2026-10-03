@@ -1,0 +1,29 @@
+/*
+ * Responsive behaviour for layout containers, in the editor.
+ *
+ * The canvas is as wide as the room left between the side panels, which is
+ * narrower than a visitor's screen, so the width alone cannot say which device
+ * is being shown. The Desktop / Tablet / Mobile toggle can: the canvas carries
+ * data-viewport, and these rules follow it.
+ *
+ *   desktop  the columns as chosen
+ *   tablet   3 and 4 column layouts become 2 columns
+ *   mobile   everything is one column
+ *
+ * The exported site carries the same rules as media queries (see export-html.ts).
+ */
+.site-root[data-viewport="tablet"] .sb-tablet-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.site-root[data-viewport="mobile"] .sb-stack,
+.site-root[data-viewport="mobile"] .sb-tablet-2 { grid-template-columns: minmax(0, 1fr) !important; flex-direction: column !important; }
+
+/* Entrance animations a section can be given in Advanced. */
+@keyframes sb-fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes sb-slide-up { from { opacity: 0; transform: translateY(24px) } to { opacity: 1; transform: none } }
+@keyframes sb-slide-left { from { opacity: 0; transform: translateX(32px) } to { opacity: 1; transform: none } }
+@keyframes sb-zoom { from { opacity: 0; transform: scale(.94) } to { opacity: 1; transform: none } }
+@media (prefers-reduced-motion: reduce) { [style*="sb-"] { animation: none !important } }
+
+/* Header on small screens: "Show all the links" keeps the menu open instead of behind a button. */
+[data-nav-mobile="links"] nav { flex-wrap: wrap; justify-content: center; }
+[data-nav-mobile="links"] nav .hidden:not([data-edit]) { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 8px 16px; }
+[data-nav-mobile="links"] nav details { display: none; }

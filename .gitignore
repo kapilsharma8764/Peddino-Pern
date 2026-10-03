@@ -1,0 +1,46 @@
+node_modules/
+dist/
+dist-ssr/
+build/
+*.local
+
+.env
+.env.*
+!.env.example
+
+.DS_Store
+Thumbs.db
+
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+*.log
+npm-debug.log*
+logs/
+
+coverage/
+.vite/
+
+# Local API data — a running server writes here
+server/data/
+
+# Pipeline output
+reports/
+client/playwright-report/
+client/test-results/
+test-results/
+
+# Raw downloaded template kits used as source material while building the
+# catalog — not part of the shipped app, and far too large (and licensed on
+# terms of their own) to belong in this repo.
+templates Download/
+.template-previews/
+
+# Ready-made templates live in PostgreSQL (template_assets); import with server/scripts/import-templates.mjs.
+# ~8 GB on disk, too big for GitHub. Keep them locally only.
+client/public/original-templates/
+client/public/templates/
+client/public/gallery/
+*.err.log
+import.log

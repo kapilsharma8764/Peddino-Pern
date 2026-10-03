@@ -1,0 +1,7 @@
+# Template files live in MongoDB and are served by the API — never upload them.
+public/original-templates
+public/templates
+public/gallery
+e2e
+test-results
+playwright-report

@@ -1,0 +1,65 @@
+/* Keep the dark source video in the site's pale lavender and blue palette. */
+.marketing-shell .studio-hero {
+  isolation: isolate;
+}
+
+.marketing-shell .studio-hero-motion {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: clamp(590px, 78vh, 820px);
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateX(-50%);
+  background: linear-gradient(115deg, #f0eafa, #eaf3ff 54%, #f2eaf9);
+  -webkit-mask-image: linear-gradient(#000 0%, #000 73%, transparent 100%);
+  mask-image: linear-gradient(#000 0%, #000 73%, transparent 100%);
+}
+
+.marketing-shell .studio-hero-motion video {
+  position: absolute;
+  inset: -12%;
+  width: 124%;
+  height: 124%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: center 45%;
+  opacity: .3;
+  transform: translate3d(0, var(--hero-scroll-shift, 0px), 0);
+  will-change: transform;
+}
+
+.marketing-shell .studio-hero-motion::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 58% 50% at 50% 44%, #fcfbffba, #fcfbff76 56%, transparent 100%),
+    linear-gradient(180deg, #fbfbff91, transparent 36%);
+}
+
+.marketing-shell .studio-hero .studio-badge {
+  color: #765bab;
+  border-color: #c3b0eb;
+  background: #ffffffb8;
+}
+
+.marketing-shell .studio-hero .hero-details {
+  color: #58627a;
+}
+
+[data-motion='paused'] .studio-hero-motion video {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-hero-motion video { display: none; }
+}
+
+@media (max-width: 760px) {
+  .marketing-shell .studio-hero-motion { height: 650px; }
+  .marketing-shell .studio-hero-motion video { object-position: center; }
+}

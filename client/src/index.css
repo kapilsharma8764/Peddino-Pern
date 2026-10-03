@@ -1,0 +1,438 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Ground and surfaces ─────────────────────────────────────────
+     The interface sits on near-black. Every panel, card and input is a
+     translucent white wash over that ground, which is what gives the
+     glass feel. These are the opaque equivalents of white/5, white/10 …
+     so they can be used as plain background colours.                */
+  --color-bg-0: #050505;  /* page ground                             */
+  --color-bg-1: #0b0b0b;  /* elevated panel, modal, popover          */
+  --color-bg-2: #141417;  /* card / input surface   (≈ white/5)      */
+  --color-bg-3: #1a1a1e;  /* hover surface          (≈ white/8)      */
+  --color-bg-4: #232328;  /* pressed / active       (≈ white/10)     */
+  --color-bg-5: #2c2c32;  /* strongest surface      (≈ white/14)     */
+
+  /* ── Hairlines ──────────────────────────────────────────────────
+     Borders are what separate panels here, not shadows. Keep them
+     barely visible: the default sits around white/10.               */
+  --color-border-subtle: #19191d;
+  --color-border-default: #232328;
+  --color-border-hover: #34343a;
+
+  /* ── Text ramp ──────────────────────────────────────────────────
+     Four steps. Most secondary copy lands on text-2.                */
+  --color-text-0: #ffffff;
+  --color-text-1: #d4d4d8;
+  --color-text-2: #a1a1aa;
+  --color-text-3: #71717a;
+
+  /* ── Brand ──────────────────────────────────────────────────────
+     Indigo→purple. Reserved for publish-level actions and the
+     selected state; ordinary primary buttons stay white on black.   */
+  --color-brand: #6366f1;
+  --color-brand-dim: #4f46e5;
+  --color-brand-2: #a855f7;
+  --color-brand-glow: rgba(99, 102, 241, 0.14);
+  --color-brand-glow2: rgba(99, 102, 241, 0.06);
+
+  /* ── Status ─────────────────────────────────────────────────────  */
+  --color-status-red: #f87171;
+  --color-status-yellow: #facc15;
+  --color-status-blue: #3b82f6;
+  --color-status-green: #10b981;
+
+  /* ── Radius ─────────────────────────────────────────────────────
+     Generous corners are part of the look: 8px on buttons, 16px on
+     cards and inputs, 24px on modals.                               */
+  --radius-default: 8px;
+  --radius-lg: 16px;
+  --radius-panel: 24px;
+
+  /* ── Type ───────────────────────────────────────────────────────  */
+  --font-sans: "DM Sans", -apple-system, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+}
+
+:root {
+  /* Fallbacks for published sites. A site's Design panel overrides these
+     semantic tokens at its own .site-root, so one saved palette controls all
+     themed widgets without editing individual blocks. */
+  --brand-primary: #6366f1;
+  --brand-secondary: #4f46e5;
+  --brand-accent: #6366f1;
+  --brand-text: #ffffff;
+  --brand-bg: #050505;
+  --color-accent-rgb: 99, 102, 241;
+}
+
+html {
+  font-size: 14px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg-0);
+  color: var(--color-text-0);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bg-5);
+}
+
+/* Focus states */
+*:focus-visible:not(textarea) {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+textarea:focus-visible {
+  outline: none;
+}
+
+/* Page-level stagger reveal */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes selectPulse {
+  0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+}
+
+@utility animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+}
+
+@utility animate-scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility animate-shimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@utility animate-select-pulse {
+  animation: selectPulse 0.4s ease-out;
+}
+
+/* Antigravity Floating & Micro-interactions */
+@keyframes antigravityFloat {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes popCheck {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes ctaGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), 0 4px 12px rgba(0, 0, 0, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 26px rgba(168, 85, 247, 0.75), 0 4px 16px rgba(168, 85, 247, 0.3);
+    transform: scale(1.02);
+  }
+}
+
+.animate-antigravity {
+  animation: antigravityFloat 4s ease-in-out infinite alternate;
+}
+
+.animate-pop-check {
+  animation: popCheck 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-cta-glow {
+  animation: ctaGlowPulse 2.4s ease-in-out infinite;
+}
+
+.float-delay-0 { animation-delay: 0s; }
+.float-delay-1 { animation-delay: 0.4s; }
+.float-delay-2 { animation-delay: 0.8s; }
+.float-delay-3 { animation-delay: 0.3s; }
+.float-delay-4 { animation-delay: 0.7s; }
+.float-delay-5 { animation-delay: 0.1s; }
+.float-delay-6 { animation-delay: 0.5s; }
+.float-delay-7 { animation-delay: 0.9s; }
+.float-delay-8 { animation-delay: 0.2s; }
+
+@utility stagger-1 { animation-delay: 0ms; }
+@utility stagger-2 { animation-delay: 50ms; }
+@utility stagger-3 { animation-delay: 100ms; }
+@utility stagger-4 { animation-delay: 150ms; }
+@utility stagger-5 { animation-delay: 200ms; }
+@utility stagger-6 { animation-delay: 250ms; }
+@utility stagger-7 { animation-delay: 300ms; }
+@utility stagger-8 { animation-delay: 350ms; }
+
+/* Card hover lift */
+@utility card-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+}
+
+@utility card-lift-hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 4px 10px rgba(0, 0, 0, 0.2), 0 0 16px rgba(99, 102, 241, 0.06);
+  border-color: var(--color-border-hover);
+}
+
+/* Accent glow shadows - @utility so Tailwind v4 generates hover:/group-hover: variants */
+@utility accent-glow-sm {
+  box-shadow: 0 0 16px rgba(var(--color-accent-rgb, 99, 102, 241), 0.1);
+}
+@utility accent-glow-md {
+  box-shadow: 0 0 16px rgba(var(--color-accent-rgb, 99, 102, 241), 0.15);
+}
+@utility accent-glow-lg {
+  box-shadow: 0 0 20px rgba(var(--color-accent-rgb, 99, 102, 241), 0.25);
+}
+@utility accent-glow-xl {
+  box-shadow: 0 0 24px rgba(var(--color-accent-rgb, 99, 102, 241), 0.3);
+}
+@utility accent-glow-ring {
+  box-shadow: 0 0 32px rgba(var(--color-accent-rgb, 99, 102, 241), 0.1);
+}
+
+/* Scroll-reveal animation system
+   Parent gets .scroll-revealed when visible in viewport.
+   Children with .reveal-* classes animate in with staggered delays. */
+
+.reveal-fade-up,
+.reveal-scale,
+.reveal-slide-left,
+.reveal-slide-right {
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-fade-up { transform: translateY(16px); }
+.reveal-scale { transform: scale(0.95); }
+.reveal-slide-left { transform: translateX(-20px); }
+.reveal-slide-right { transform: translateX(20px); }
+
+.scroll-revealed .reveal-fade-up,
+.scroll-revealed .reveal-scale,
+.scroll-revealed .reveal-slide-left,
+.scroll-revealed .reveal-slide-right {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delay utilities */
+@utility reveal-d1 { --reveal-delay: 0ms; }
+@utility reveal-d2 { --reveal-delay: 80ms; }
+@utility reveal-d3 { --reveal-delay: 160ms; }
+@utility reveal-d4 { --reveal-delay: 240ms; }
+@utility reveal-d5 { --reveal-delay: 320ms; }
+@utility reveal-d6 { --reveal-delay: 400ms; }
+@utility reveal-d7 { --reveal-delay: 480ms; }
+@utility reveal-d8 { --reveal-delay: 560ms; }
+
+/* Skip to content link - visible only on focus */
+.skip-to-content {
+  position: fixed;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  padding: 8px 16px;
+  background: var(--color-brand);
+  color: #000;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 0 0 8px 8px;
+  transition: top 0.2s;
+}
+.skip-to-content:focus {
+  top: 0;
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-fade-up,
+  .reveal-scale,
+  .reveal-slide-left,
+  .reveal-slide-right {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Only live editor wrappers add these attributes; published markup has no selection. */
+[data-block-owner] [data-element]:hover, [data-block-owner] [data-edit]:hover, [data-block-owner] [data-image]:hover { outline: 1px dashed #818cf8; outline-offset: 3px; }
+[data-element-selected] { outline: 2px solid #818cf8 !important; outline-offset: 3px; }
+[data-block-owner] [data-element] { cursor: pointer; }
+
+
+/*
+ * The width a section's content runs to.
+ *
+ * Every widget draws itself as `<section>` with padding and no width limit, so
+ * on a wide monitor a headline stretched the whole 1900 pixels and a row of
+ * three cards spread until they looked like a wireframe. Real websites cap the
+ * content and centre it; the section itself stays full width so a background
+ * still reaches both edges.
+ *
+ * Applied here, once, rather than in forty-six widgets — and to the direct
+ * children of the section, so the cap lands on the content and never on the
+ * band of colour behind it.
+ */
+.site-root {
+  --site-content-width: 1200px;
+}
+
+.site-root section > * {
+  max-width: var(--site-content-width);
+  margin-inline: auto;
+}
+
+/* A section that deliberately runs edge to edge opts out. */
+.site-root section > .full-bleed {
+  max-width: none;
+}
+
+/* Reusable media frame: add this class to any image widget/container. The
+   modifier declares the template's intended ratio; the uploaded asset always
+   fills that frame without changing the surrounding layout. */
+.el-fit-cover {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.el-fit-cover--16x9 { aspect-ratio: 16 / 9; }
+.el-fit-cover--4x3 { aspect-ratio: 4 / 3; }
+.el-fit-cover--square { aspect-ratio: 1 / 1; }
+
+.el-fit-cover > img,
+img.el-fit-cover {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* For Elementor-style section/container background images in imported sites. */
+.el-bg-cover {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* Cohesive dark studio top nav for /create onboarding flow */
+.create-shell .studio-nav {
+  height: 68px !important;
+  background: #0e111ddb !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(18px) !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25) !important;
+}
+.create-shell .studio-brand {
+  color: #ffffff !important;
+}
+.create-shell .brand-mark {
+  background: rgba(168, 85, 247, 0.15) !important;
+  color: #c5b7ff !important;
+}
+.create-shell .studio-desktop-nav a {
+  color: #9aa0b8 !important;
+}
+.create-shell .studio-desktop-nav a:hover,
+.create-shell .studio-desktop-nav a.active {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+.create-shell .nav-account {
+  color: #b5b0c8 !important;
+}
+.create-shell .motion-toggle,
+.create-shell .studio-menu-toggle {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #c5c0dc !important;
+}
+
+/* The menu link for the page being viewed. */
+a[aria-current="page"][data-element-kind="button"].is-active { color: var(--color-brand); font-weight: 600; }

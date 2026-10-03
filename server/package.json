@@ -1,0 +1,30 @@
+{
+  "name": "@sitebuilder/server",
+  "private": true,
+  "version": "0.1.0",
+  "description": "API for saving sites, publishing them, and collecting enquiries.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node --watch-path=src src/index.js",
+    "start": "node src/index.js",
+    "test": "node --test src/**/*.test.js",
+    "test:unit": "node --test --test-skip-pattern=integration src/**/*.test.js",
+    "test:integration": "node --test src/auth.integration.test.js",
+    "import:templates": "node scripts/import-templates.mjs",
+    "verify:live-templates": "node scripts/verify-live-templates.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.7.0",
+    "google-auth-library": "^11.1.0",
+    "helmet": "^8.3.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "parse-srcset": "^1.0.2",
+    "parse5": "^8.0.1",
+    "sharp": "^0.35.4"
+  }
+}
